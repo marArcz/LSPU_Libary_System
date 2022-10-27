@@ -1,0 +1,24 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+main.auth {
+  background: url("../images/library-bg.webp");
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+#sidebar {
+  position: fixed;
+  left: 0;
+  top: 10vh;
+  height: 100%;
+  width: 200px;
+  background: #0B177F;
+}/*# sourceMappingURL=admin.css.map */

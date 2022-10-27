@@ -1,0 +1,15 @@
+@import './colors';
+
+$primary: $blue;
+
+
+@import '../bootstrap/scss/bootstrap.scss';
+
+@font-face {
+    font-family: 'Gill Sans';
+    src: url('../GIL_____.TTF');
+}
+
+*{
+    font-family: 'Gill Sans' !important;
+}

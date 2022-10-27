@@ -1,0 +1,34 @@
+@import './colors';
+
+$logo-lg: 3rem;
+$navbar-h:10vh;
+
+#navbar {
+    height: $navbar-h;
+    .logo{
+        width: $logo-lg;
+    }
+}
+main{
+    padding-top: $navbar-h !important;
+}
+.hero-main{
+    background: url('../images/gL9d6Wnb_4x\ 1.png');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+    .text{
+        border-left: 4px solid $yellow;
+        padding-left: 20px !important;
+    }
+
+    .footer{
+        background: $blue;
+        position: absolute;
+        bottom: -18px;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+    }
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{%block title%}{%endblock%} - LSPU</title>
+    <link rel="shortcut icon" href="{{url_for('static',filename='images/lspu_seal-6 1.png')}}" type="image/x-icon">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/custom.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/user.css')}}">
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-primary" id="navbar">
+        <div class="container">
+            <a href="{{url_for('index')}}" class="navbar-brand">
+                <img src="{{url_for('static',filename='images/lspu_seal-6 1.png')}}" alt="logo"
+                    class="logo img-fluid me-1">
+                <span class="d-none d-lg-inline d-md-inline">LSPU Library E-Access</span>
+            </a>
+        </div>
+    </nav>
+
+    <main>
+       {% include 'admin/components/sidebar.html.jinja'%}
+       <div class="main-content">
+            {%block content%} {%endblock%}
+       </div>
+    </main>
+</body>
+
+</html>

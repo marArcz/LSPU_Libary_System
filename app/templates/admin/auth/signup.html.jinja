@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Sign In</title>
+    <link rel="shortcut icon" href="{{url_for('static',filename='images/lspu_seal-6 1.png')}}" type="image/x-icon">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/custom.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/admin.css')}}">
+</head>
+
+<body class="bg-light">
+    <main class=" pt-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-7">
+                    <div class="auth-card card rounded-4 border-0 shadow">
+                        <div class="card-header bg-dark">
+                            <p class="text-light my-0">LSPU Library E-Access</p>
+                        </div>
+                        <div class="card-body text-center py-4">
+                            <div class="row justify-content-center mb-5">
+                                <div class="col-md-11 text-center">
+                                    <img src="{{url_for('static',filename='images/lspu_seal-6 1.png')}}"
+                                        class="img-fluid" alt="">
+                                </div>
+                            </div>
+                            <h2 class="mt-4 mb-3 fw-bold">ADMIN - SIGNUP</h2>
+                            <p class="fs-5 text-secondary mb-5">Sign in to manage system.</p>
+                            <div class="container">
+                                {% for message in get_flashed_messages() %}
+                                <div class="text-start py-2 flash alert alert-primary mb-3">{{ message }}</div>
+                                {% endfor %}
+                            </div>
+                            <form action="{{url_for('admin_auth.signup')}}" method="post">
+                                <div class="container">
+                                    <div class="mb-3 text-start">
+                                        <input type="email" name="email" required placeholder="Email"
+                                            class="form-control">
+                                    </div>
+                                    <div class="mb-3 text-start">
+                                        <input type="text" name="username" required placeholder="Username"
+                                            class="form-control">
+                                    </div>
+                                    <div class="mb-3 text-start">
+                                        <input type="password" name="password" required placeholder="Password"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                                <button class="btn px-lg-4 mt-3 btn-dark shadow text-uppercase rounded-5" type="submit"><span class="me-1">create</span> account</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
