@@ -1,6 +1,44 @@
-<aside id="sidebar">
+<aside id="sidebar" class="shadow">
     <div class="header">
-        <div class="user-photo"></div>
-        {{ g.admin.username }}
+        <div class="user-photo shadow border-light border border-2" data-img="{{g.admin.photo}}"></div>
+        <p class="text-center fs-6  text-secondary text-capitalize">
+            {{g.admin.name}}
+        </p>
     </div>
+    <hr>
+    <ul class="nav flex-column">
+        <li class="nav-item ps-2 mb-2 text-black-50">
+            <small>Manage</small>
+        </li>
+        <li class="nav-item mb-3">
+            <a href="{{url_for('admin.dashboard')}}" class="nav-link">
+                <i class="bx bxs-dashboard me-lg-1"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item mb-3">
+            <a href="{{url_for('admin.students')}}" class="nav-link ">
+                <i class="bx bxs-user me-lg-1"></i>
+                <span>Students</span>
+            </a>
+        </li>
+        <li class="nav-item mb-3">
+            <a href="#" class="nav-link ">
+                <i class="bx bxs-category me-lg-1"></i>
+                <span>Categories</span>
+            </a>
+        </li>
+        <li class="nav-item mb-3">
+            <a href="#" class="nav-link ">
+                <i class="bx bxs-pen me-lg-1"></i>
+                <span>Authors</span>
+            </a>
+        </li>
+        <li class="nav-item mb-3">
+            <a href="#" class="nav-link ">
+                <i class="bx bxs-book me-lg-1"></i>
+                <span>Books</span>
+            </a>
+        </li>
+    </ul>
 </aside>

@@ -1,7 +1,8 @@
 @import './colors';
 
 $primary: $blue;
-
+$success: $green;
+$danger:$red;
 
 @import '../bootstrap/scss/bootstrap.scss';
 
@@ -12,4 +13,11 @@ $primary: $blue;
 
 *{
     font-family: 'Gill Sans' !important;
+}
+
+.btn-success{
+    color: white !important;
+}
+.btn-danger{
+    color: white !important;
 }

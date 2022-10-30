@@ -1,11 +1,12 @@
 import functools
+import os
 from webbrowser import get
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, current_app, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
-
+from werkzeug.utils import secure_filename
 from app.db import get_db
 
 bp = Blueprint('admin_auth', __name__, url_prefix='/admin/auth')
@@ -29,22 +30,28 @@ def signup():
         email = request.form['email']
         username = request.form['username']
         password = request.form['password']
-
+        photo = request.files['photo']
+        name = request.form['name']
         db = get_db()
         
         error = None
         if error is None:
+            filename = secure_filename(photo.filename)
+            path = 'static/images/' + filename
+            photo.save("app/"+path)
+            
             try:
                 db.execute(
-                    'INSERT INTO admin(email,username,password) VALUES(?,?,?)',(email,username,generate_password_hash(password))
+                    'INSERT INTO admin(name,email,username,password,photo) VALUES(?,?,?,?,?)',(name,email,username,generate_password_hash(password),path)
                 )
                 db.commit()
             except db.IntegrityError:
                 error = f"Email {email} is already taken."
+
             else:
-                flash('Successfully created an account, sign in to continue!')
+                session['success'] = 'Successfully created an account.'
                 return redirect(url_for("admin_auth.signin"))
-        flash(error)    
+        flash(error,'error')    
         
     else:
         db = get_db()
@@ -79,7 +86,7 @@ def signin():
             session['admin_id'] = admin['id']
             flash('Successfully signed in!')
             return redirect(url_for('admin.dashboard'))
-        flash(error)
+        flash(error,'error')    
     else:
         db = get_db()
         admin = db.execute('SELECT COUNT(*) as count FROM admin').fetchone()

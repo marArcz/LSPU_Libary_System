@@ -1,10 +1,19 @@
 @import './colors';
-$sidebar-lg: 200px;
-$navbar-h: 10vh;
+$sidebar-lg: 210px;
+$navbar-h: 12vh;
 
 body {
     padding: 0;
     margin: 0;
+}
+
+#navbar {
+    $logo-size:3.6rem;
+    height: $navbar-h;
+    .logo{
+        width:$logo-size;
+        height:$logo-size;
+    }
 }
 
 main {
@@ -19,14 +28,50 @@ main {
         background-attachment: fixed;
     }
 
-  
+    #sidebar {
+        position: fixed;
+        left: 0;
+        top: $navbar-h;
+        height: 100%;
+        width: $sidebar-lg;
+        background: #fff;
+    }
+    .main-content{
+        margin-left: $sidebar-lg;
+        padding: 20px 8px;
+    }
 }
 
-#sidebar {
-    position: fixed;
-    left: 0;
-    top: $navbar-h;
-    height: 100%;
-    width: $sidebar-lg;
-    background: $blue;
+
+.auth-profile-pic{
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    border-radius: 50%;
+    box-sizing: border-box;
+
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+}
+
+.user-photo{
+    $size:100px;
+    width: $size;
+    height: $size;
+    margin: 13px auto;
+    border-radius: 50%;
+    box-sizing: border-box;
+    // background-image: url('../images/avatar-380-456332-512.webp');
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+}
+
+.dashboard-card{
+    border-top: none;
+    border-bottom: none;
+    border-right: none;
+    border-left-width: 3px !important;
+    border-left-style: solid !important;
 }

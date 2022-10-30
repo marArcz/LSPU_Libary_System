@@ -3,6 +3,14 @@ body {
   margin: 0;
 }
 
+#navbar {
+  height: 12vh;
+}
+#navbar .logo {
+  width: 3.6rem;
+  height: 3.6rem;
+}
+
 main.auth {
   background: url("../images/library-bg.webp");
   min-height: 100vh;
@@ -13,12 +21,45 @@ main.auth {
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
-
-#sidebar {
+main #sidebar {
   position: fixed;
   left: 0;
-  top: 10vh;
+  top: 12vh;
   height: 100%;
-  width: 200px;
-  background: #0B177F;
+  width: 210px;
+  background: #fff;
+}
+main .main-content {
+  margin-left: 210px;
+  padding: 20px 8px;
+}
+
+.auth-profile-pic {
+  width: 150px;
+  height: 150px;
+  margin: auto;
+  border-radius: 50%;
+  box-sizing: border-box;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
+.user-photo {
+  width: 100px;
+  height: 100px;
+  margin: 13px auto;
+  border-radius: 50%;
+  box-sizing: border-box;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
+.dashboard-card {
+  border-top: none;
+  border-bottom: none;
+  border-right: none;
+  border-left-width: 3px !important;
+  border-left-style: solid !important;
 }/*# sourceMappingURL=admin.css.map */

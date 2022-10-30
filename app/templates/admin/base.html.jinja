@@ -8,12 +8,13 @@
     <title>{%block title%}{%endblock%} - LSPU</title>
     <link rel="shortcut icon" href="{{url_for('static',filename='images/lspu_seal-6 1.png')}}" type="image/x-icon">
     <link rel="stylesheet" href="{{url_for('static',filename='css/custom.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/user.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/admin.css')}}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
     <nav class="navbar navbar-dark bg-primary" id="navbar">
-        <div class="container">
+        <div class="container-fluid">
             <a href="{{url_for('index')}}" class="navbar-brand">
                 <img src="{{url_for('static',filename='images/lspu_seal-6 1.png')}}" alt="logo"
                     class="logo img-fluid me-1">
@@ -28,6 +29,21 @@
             {%block content%} {%endblock%}
        </div>
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+    <script src="/static/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script>
+        $(function(){
+            
+            $.each($(".user-photo"),(index,elem)=>{
+                console.log('elem: ', $(elem))
+                let img = $(elem).data('img');
+                console.log('image: ', img)
+                $(elem).css('background-image',`url('/${img}')`)
+            })
+        })
+    </script>
+    {%block scripts%} {%endblock%}
 </body>
 
 </html>
