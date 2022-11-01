@@ -10936,11 +10936,11 @@ textarea.form-control-lg {
   }
 }
 @font-face {
-  font-family: "Gill Sans";
-  src: url("../GIL_____.TTF");
+  font-family: "custom";
+  src: url("../CharlieDisplay-Light.otf");
 }
 * {
-  font-family: "Gill Sans" !important;
+  font-family: "custom" !important;
 }
 
 .btn-success {
@@ -10949,4 +10949,8 @@ textarea.form-control-lg {
 
 .btn-danger {
   color: white !important;
+}
+
+.text-primary-50 {
+  color: rgba(11, 23, 127, 0.7);
 }/*# sourceMappingURL=custom.css.map */

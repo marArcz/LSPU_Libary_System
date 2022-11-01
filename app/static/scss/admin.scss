@@ -8,11 +8,12 @@ body {
 }
 
 #navbar {
-    $logo-size:3.6rem;
+    $logo-size: 3.6rem;
     height: $navbar-h;
-    .logo{
-        width:$logo-size;
-        height:$logo-size;
+
+    .logo {
+        width: $logo-size;
+        height: $logo-size;
     }
 }
 
@@ -35,15 +36,29 @@ main {
         height: 100%;
         width: $sidebar-lg;
         background: #fff;
+        overflow-x: hidden;
+
+        .nav-link {
+            padding: 13px 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link.active {
+            background: rgba($blue, 0.1) !important;
+            border-left: 3px solid $blue;
+            color: $blue !important;
+        }
     }
-    .main-content{
+
+    .main-content {
         margin-left: $sidebar-lg;
         padding: 20px 8px;
     }
 }
 
 
-.auth-profile-pic{
+.auth-profile-pic {
     width: 150px;
     height: 150px;
     margin: auto;
@@ -55,8 +70,8 @@ main {
     background-size: cover !important;
 }
 
-.user-photo{
-    $size:100px;
+.user-photo {
+    $size: 100px;
     width: $size;
     height: $size;
     margin: 13px auto;
@@ -68,10 +83,33 @@ main {
     background-size: cover !important;
 }
 
-.dashboard-card{
+.dashboard-card {
     border-top: none;
     border-bottom: none;
     border-right: none;
     border-left-width: 3px !important;
     border-left-style: solid !important;
+}
+
+.c-border {
+    border-top: none;
+    border-bottom: none;
+    border-right: none;
+    border-left-width: 3px !important;
+    border-left-style: solid !important;
+}
+
+@each $color,
+$value in $custom-color-map {
+    .btn-c-#{$color} {
+        background: rgba($color: $value, $alpha: 0.15) !important;
+        color: rgba($color: $value, $alpha: 1);
+        font-weight: bold !important;
+        border: 1px solid rgba($color: $value, $alpha: 0.12) !important;
+
+        &:hover {
+            background: rgba($color: $value, $alpha: 0.25) !important;
+            color: rgba($color: $value, $alpha: 1) !important;
+        }
+    }
 }

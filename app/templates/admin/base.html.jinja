@@ -10,9 +10,11 @@
     <link rel="stylesheet" href="{{url_for('static',filename='css/custom.css')}}">
     <link rel="stylesheet" href="{{url_for('static',filename='css/admin.css')}}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.5/dist/sweetalert2.min.css">
 </head>
 
-<body>
+<body class="">
     <nav class="navbar navbar-dark bg-primary" id="navbar">
         <div class="container-fluid">
             <a href="{{url_for('index')}}" class="navbar-brand">
@@ -24,23 +26,30 @@
     </nav>
 
     <main>
-       {% include 'admin/components/sidebar.html.jinja'%}
-       <div class="main-content">
+        {% include 'admin/components/sidebar.html.jinja'%}
+        <div class="main-content">
+
             {%block content%} {%endblock%}
-       </div>
+        </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
-    <script src="/static/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+   <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.5/dist/sweetalert2.min.js"></script>
     <script>
-        $(function(){
-            
-            $.each($(".user-photo"),(index,elem)=>{
+        $(function () {
+
+            $.each($(".user-photo"), (index, elem) => {
                 console.log('elem: ', $(elem))
                 let img = $(elem).data('img');
                 console.log('image: ', img)
-                $(elem).css('background-image',`url('/${img}')`)
+                $(elem).css('background-image', `url('/${img}')`)
             })
+            const current_url = window.location.pathname
+            $('#sidebar .nav-link').filter((i, link) => $(link).attr('href') === current_url)
+            .addClass('active')
         })
     </script>
     {%block scripts%} {%endblock%}

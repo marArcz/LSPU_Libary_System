@@ -7,12 +7,12 @@ $danger:$red;
 @import '../bootstrap/scss/bootstrap.scss';
 
 @font-face {
-    font-family: 'Gill Sans';
-    src: url('../GIL_____.TTF');
+    font-family: 'custom';
+    src: url('../CharlieDisplay-Light.otf');
 }
 
 *{
-    font-family: 'Gill Sans' !important;
+    font-family: 'custom' !important;
 }
 
 .btn-success{
@@ -20,4 +20,8 @@ $danger:$red;
 }
 .btn-danger{
     color: white !important;
+}
+
+.text-primary-50{
+    color: rgba($color: $blue, $alpha: 0.7);
 }

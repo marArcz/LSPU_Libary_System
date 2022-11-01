@@ -59,7 +59,8 @@ def signup():
 
         if int(admin['count']) > 0:
             return redirect(url_for('admin_auth.signin'))
-
+        else:
+            return render_template('admin/auth/signup.html.jinja')
     return render_template('admin/auth/signup.html.jinja')
 
 

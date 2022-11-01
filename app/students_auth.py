@@ -20,7 +20,7 @@ def load_logged_in_user():
             'SELECT * FROM students WHERE id = ?', (account_id,)
         ).fetchone()
 
-@bp.route('/login', methods=('GET', 'POST'))
+@bp.route('/', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
         student_id = request.form['student_id']
