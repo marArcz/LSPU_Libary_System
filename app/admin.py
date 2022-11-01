@@ -1,3 +1,5 @@
+from sqlite3 import IntegrityError, InternalError
+import sqlite3
 from flask import (
     Blueprint, flash, g, jsonify, make_response, redirect, render_template, request, session, url_for
 )
@@ -7,6 +9,14 @@ from app.admin_auth import login_required
 from app.db import get_db
 
 bp = Blueprint('admin', __name__,url_prefix="/admin")
+
+# flashes an error message
+def flash_error_msg(msg=None):
+    if msg is None:
+        msg = "System error, please try again!"
+    
+    return flash(msg, 'error')
+
 
 @bp.before_app_request
 def loadAdmin():
@@ -35,7 +45,7 @@ def students():
 
 
 # add student
-@bp.route('/add-student', methods=('POST','GET'))
+@bp.route('/students/add', methods=('POST','GET'))
 @login_required
 def add_student():
     if(request.method == 'POST'):
@@ -53,15 +63,15 @@ def add_student():
         try:
             db.execute('INSERT INTO students(firstname,middlename,lastname,gender,year_level,email,password,student_id) VALUES(?,?,?,?,?,?,?,?)',(firstname,middlename,lastname,gender,year_level,email,password,student_id))
             db.commit()
-        except:
-            flash("System error, please try again!",'error')
+        except sqlite3.IntegrityError:
+            flash("Cannot have duplicate values for Student IDs!",'error')
         else:
-            session['success'] = "Successfully added!"
+            flash("Successfully added")
         
     return redirect(url_for('admin.students'))
 
-# add student
-@bp.route('/edit-student', methods=('POST','GET'))
+# edit student
+@bp.route('/students/edit', methods=('POST','GET'))
 @login_required
 def edit_student():
     if(request.method == 'POST'):
@@ -70,24 +80,22 @@ def edit_student():
         lastname = request.form['lastname']
         gender = request.form['gender']
         year_level = request.form['year_level']
-        password = request.form['password']
         student_id = request.form['student_id']
-        email = ""
-
+        id = request.form['id']
         db = get_db()
 
         try:
-            db.execute('INSERT INTO students(firstname,middlename,lastname,gender,year_level,email,password,student_id) VALUES(?,?,?,?,?,?,?,?)',(firstname,middlename,lastname,gender,year_level,email,password,student_id))
+            db.execute('UPDATE students SET firstname=?,middlename=?,lastname=?,gender=?,year_level=?,student_id=? WHERE id=?',(firstname,middlename,lastname,gender,year_level,student_id,id))
             db.commit()
-        except:
+        except db.IntegrityError:
             flash("System error, please try again!",'error')
         else:
-            session['success'] = "Successfully added!"
+            flash("Successfully updated")
         
     return redirect(url_for('admin.students'))
 
 # get students / returns json
-@bp.route('/get-student',methods=("POST","GET"))
+@bp.route('/students/get',methods=("POST","GET"))
 def get_student():
     if(request.method == "GET"):
         return redirect(url_for('admin.students'))
@@ -99,6 +107,7 @@ def get_student():
 
         if student:
             student_obj = {
+                'id':student['id'],
                 'firstname': student['firstname'],
                 'middlename': student['middlename'],
                 'lastname': student['lastname'],
@@ -111,4 +120,276 @@ def get_student():
             return jsonify(student_obj)
         else:
             return make_response(jsonify(message="Cannot find student"))
+
+# delete category
+@bp.route('/students/delete')
+def delete_student():
+    id = request.args.get('id',type=int)
+
+    db = get_db()
+
+    try:
+        db.execute('DELETE FROM students WHERE id = ?',(id,))
+        db.commit()
+    except:
+        flash_error_msg()
+    else:
+        session['success'] = "Successfully deleted!"
+    return redirect(url_for('admin.students'))
+
+# categories
+@bp.route('/categories')
+@login_required
+def categories():
+    db = get_db()
+    categories = db.execute("SELECT * FROM categories").fetchall()
+
+    return render_template('admin/categories.html.jinja',categories=categories,len=len(categories))
+
+# add category
+@bp.route('/categories/add',methods=('POST','GET'))
+@login_required
+def add_category():
+    if(request.method == "POST"):
+        name = request.form['name']
+        db=get_db()
+
+        try:
+            db.execute('INSERT INTO categories(name) VALUES(?)',(name,))
+            db.commit()
+        except:
+            flash('System error, please try again!','error')
+        else:
+            flash("Successfully added")
+
+    return redirect(url_for('admin.categories'))
+
+# edit category
+@bp.route('/categories/edit',methods=('POST','GET'))
+@login_required
+def edit_category():
+    if(request.method == "POST"):
+        name = request.form['name']
+        id = request.form['id']
+        db=get_db()
+
+        try:
+            db.execute('UPDATE categories SET name = ? WHERE id = ?',(name,id))
+            db.commit()
+        except:
+            flash_error_msg()
+        else:
+            flash("Successfully updated")
+
+    return redirect(url_for('admin.categories'))
+
+
+# get one category / returns json
+@bp.route('/categories/get',methods=("POST","GET"))
+def get_category():
+    if(request.method == "GET"):
+        return redirect(url_for('admin.categories'))
+    else:
+        id = request.form['id']
+        db = get_db()
+
+        category = db.execute("SELECT * FROM categories WHERE id = ?", (id,)).fetchone()
+
+        if category:
+            obj = {
+                'id':category['id'],
+                'name':category['name']
+            }
+
+            return jsonify(obj)
+        else:
+            return make_response(jsonify(message="Cannot find category"))
+
+# delete category
+@bp.route('/categories/delete')
+def delete_category():
+    id = request.args.get('id',type=int)
+
+    db = get_db()
+
+    try:
+        db.execute('DELETE FROM categories WHERE id = ?',(id,))
+        db.commit()
+    except:
+        flash_error_msg()
+    else:
+        flash("Successfully deleted")
+    return redirect(url_for('admin.categories'))
+
+# authors
+@bp.route('/authors')
+@login_required
+def authors():
+    db = get_db()
+    authors = db.execute('SELECT * FROM authors').fetchall()
+
+    return render_template('admin/authors.html.jinja',authors=authors,len=len(authors))
+
+# get author
+@bp.route('/authors/get',methods=('POST',))
+def get_author():
+    id = request.form['id']
+    db = get_db()
+    author = db.execute('SELECT * FROM authors WHERE id=?',(id,)).fetchone()
+
+    if author:
+        return jsonify({
+            'id':author['id'],
+            'name':author['name'],
+        })
+    else:
+        return jsonify({
+            'message':'Cannot find author'
+        })
+
+# get author
+@bp.route('/authors/delete')
+@login_required
+def delete_author():
+    id = request.args.get('id')
+    try:
+        db = get_db()
+        db.execute('DELETE FROM authors WHERE id=?',(id,))
+        db.commit()
+    except:
+        flash_error_msg()
+    else:
+        flash('Successfully deleted')
+
+    return redirect(url_for('admin.authors'))
+# add authors
+@bp.route('/authors/add',methods=('POST',"GET"))
+@login_required
+def add_author():
+    if request.method == "POST":
+        name = request.form['name']
+        db = get_db()
+        try:
+            db.execute('INSERT INTO authors(name) VALUES(?)',(name,))
+            db.commit()
+        except:
+            flash_error_msg()
+        else:
+            flash("Successfully added")
+    return redirect(url_for('admin.authors'))
+
+# edit authors
+@bp.route('/authors/edit',methods=('POST',"GET"))
+@login_required
+def edit_author():
+    if request.method == "POST":
+        name = request.form['name']
+        id = request.form['id']
+        db = get_db()
+        try:
+            db.execute('UPDATE authors SET name=? WHERE id=?',(name,id))
+            db.commit()
+        except:
+            flash_error_msg()
+        else:
+            flash("Successfully updated")
+    return redirect(url_for('admin.authors'))
+    
+
+# books
+@bp.route('/books')
+@login_required
+def books():
+    db = get_db()
+    books = db.execute('SELECT books.id,books.category_id,books.author_id,books.title,books.date_published,books.sypnosis, categories.name as category_name, authors.name as author_name FROM books INNER JOIN categories ON books.category_id = categories.id INNER JOIN authors ON books.author_id = authors.id').fetchall()
+    authors = db.execute('SELECT * FROM authors').fetchall()
+    categories = db.execute('SELECT * FROM categories').fetchall()
+    return render_template('admin/books.html.jinja',books=books,len=len(books),categories=categories,authors=authors)
+# books
+@bp.route('/books/add',methods=('POST','GET'))
+@login_required
+def add_book():
+    if(request.method == "POST"):
+        title = request.form['title']
+        category_id = request.form['category_id']
+        author_id = request.form['author_id']
+        date_published = request.form['date_published']
+        sypnosis = request.form['sypnosis']
+
+        db = get_db()
+
+        try:
+            db.execute("INSERT INTO books(title,category_id,author_id,date_published,sypnosis) VALUES(?,?,?,?,?)" ,(title,category_id,author_id,date_published,sypnosis))
+            db.commit()
+        except:
+            flash_error_msg()
+        else:
+            flash("Successfully added!")
+    return redirect(url_for('admin.books'))
+
+@bp.route('/books/edit',methods=('POST',))
+@login_required
+def edit_book():
+    if(request.method == "POST"):
+        id = request.form['id']
+        title = request.form['title']
+        category_id = request.form['category_id']
+        author_id = request.form['author_id']
+        date_published = request.form['date_published']
+        sypnosis = request.form['sypnosis']
+
+        db = get_db()
+
+        try:
+            db.execute("UPDATE books SET title=?,category_id=?,author_id=?,date_published=?,sypnosis=? WHERE id=?" ,(title,category_id,author_id,date_published,sypnosis,id))
+            db.commit()
+        except:
+            flash_error_msg()
+        else:
+            flash("Successfully updated!")
+    return redirect(url_for('admin.books'))
+
+@bp.route('/books/get',methods=('POST','GET'))
+def get_book():
+    if(request.method == "POST"):
+        id = request.form['id']
+        db = get_db()
+
+        book = db.execute("SELECT STRFTIME('%m-%d-%Y',books.date_published) as date, books.id,books.category_id,books.author_id,books.title,books.sypnosis, categories.name as category_name, authors.name as author_name FROM books INNER JOIN categories ON books.category_id = categories.id INNER JOIN authors ON books.author_id = authors.id WHERE books.id = ?",(id,)).fetchone()
+
+        return jsonify({
+            'title':book['title'],
+            'id':book['id'],
+            'sypnosis':book['sypnosis'],
+            'date_published':book['date'],
+            'category_id':book['category_id'],
+            'author_id':book['author_id'],
+            'category_name':book['category_name'],
+            'author_name':book['author_name'],
+        })
+
+    return redirect(url_for('admin.books'))
+
+@bp.route('/books/get')
+def delete_book():
+    id = request.args.get('id')
+
+    if id:
+        db = get_db()
+        try:
+            db.execute('DELETE FROM books WHERE id = ?',(id,))
+            db.commit()
+        except:
+            flash_error_msg()
+        else:
+            flash("Successfully deleted!")
+    else:
+        flash("Cannot find book",'error')
+    return redirect(url_for('admin.books'))
+
+
+@bp.route('/rentals')
+@login_required
+def rentals():
+    
 
