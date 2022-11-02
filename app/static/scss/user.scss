@@ -32,3 +32,43 @@ main{
         right: 0;
     }
 }
+
+.search-header{
+    background: url('../images/gL9d6Wnb_4x\ 1.png');
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 20px 0;
+
+    .search-input-group{
+        position: relative;
+        .icon{
+            position: absolute;
+            left: 1rem;
+            font-weight: bold;
+            top: 10px;
+        }
+        .search-input{
+            padding-left: 2.8rem;
+            border: none;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+    }
+    .search-card{
+        margin-bottom: -2.5rem;
+    }
+}
+
+.search-category-nav{
+    .nav-link{
+        &.active{
+            border-bottom: 3px solid $blue;
+        }
+        &:not(.active){
+            &:hover{
+                background: rgba($color: $blue, $alpha: 0.1);
+            }
+        }
+    }
+}

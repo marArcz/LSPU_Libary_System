@@ -49,7 +49,7 @@ def signup():
                 error = f"Email {email} is already taken."
 
             else:
-                session['success'] = 'Successfully created an account.'
+                flash('Successfully created an account.')
                 return redirect(url_for("admin_auth.signin"))
         flash(error,'error')    
         
@@ -85,14 +85,14 @@ def signin():
 
         if error is None:
             session['admin_id'] = admin['id']
-            flash('Successfully signed in!')
+            flash('Welcome admin!')
             return redirect(url_for('admin.dashboard'))
         flash(error,'error')    
     else:
         db = get_db()
         admin = db.execute('SELECT COUNT(*) as count FROM admin').fetchone()
 
-        if admin['count'] == 0:
+        if int(admin['count']) <= 0:
             return redirect(url_for('admin_auth.signup'))
 
     return render_template('admin/auth/signin.html.jinja')

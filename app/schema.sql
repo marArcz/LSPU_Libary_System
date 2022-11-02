@@ -3,6 +3,8 @@ DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS books;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS rentals;
+DROP TABLE IF EXISTS rental_details;
+DROP TABLE IF EXISTS authors;
 
 CREATE TABLE students (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,11 +39,12 @@ CREATE TABLE authors(
 CREATE TABLE books(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
-    sypnosis TEXT NOT NULL,
+    sypnosis TEXT(5000) NOT NULL,
     date_published date not null,
     date_posted date null DEFAULT CURRENT_TIMESTAMP,
     author_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL,
+    isAvailable INTEGER DEFAULT 1,
     FOREIGN KEY (author_id) REFERENCES authors(id),
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
@@ -49,7 +52,9 @@ CREATE TABLE rentals(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     student_id INTEGER NOT NULL,
     date_rented DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status INTEGER NOT NULL,
     FOREIGN KEY (student_id) REFERENCES students(id)
+    
 );
 CREATE TABLE rental_details(
     id INTEGER PRIMARY KEY AUTOINCREMENT,

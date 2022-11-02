@@ -2,10 +2,11 @@ $blue:#0B177F;
 $yellow:#F9CA01;
 $green: #36B37E;
 $red:#DE350B;
-
+$black:#200;
 $custom-color-map:(
     'primary':$blue,
     'warning':$yellow,
     'success':$green,
-    'danger':$red
+    'danger':$red,
+    'dark':$black
 )

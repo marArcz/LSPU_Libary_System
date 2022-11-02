@@ -1,0 +1,196 @@
+{%extends 'students/base.html.jinja'%}
+
+{%block title %} Results for '{{search_query}}' {%endblock%}
+
+{%block content %}
+<section class="bg-light pb-5">
+    <header class="search-header">
+        <div class="container">
+            <p class="fs-2 text-light mt-2">
+                Browse <span class="text-warning">Books</span>
+            </p>
+            <p class="my-1 text-white-50">
+                <small>We currently have <span class="text-warning mx-1">{{books_count}}</span> available books in the
+                    library.</small>
+            </p>
+
+            <div class="card mt-4 search-card shadow border-0">
+                <div class="card-body p-2">
+                    <form action="{{url_for('students.search_books')}}" method="get">
+                        <div class="d-flex align-items-center">
+                            <div class="search-input-group w-100 flex-grow-1">
+                                <span class="icon bx bx-search text-warning"></span>
+                                <input type="search" value="{{search_query}}" name="search_query"
+                                    class="rounded-1 form-control search-input" placeholder="Search book..." id="">
+                            </div>
+                            <div>
+                                <button type="submit" class="rounded-1 my-0 btn text-white btn-warning">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container mt-5 ">
+        <ul class="nav search-category-nav" id="category-nav"
+            data-active="{{selected_category.id if selected_category else 0}}">
+            <li class="nav-item mx-2">
+                <a href="{{url_for('students.search_books')}}?search_query={{search_query}}&category=" class="nav-link"
+                    data-category="0">All</a>
+            </li>
+            {%for category in categories%}
+            <li class="nav-item mx-2">
+                <a href="{{url_for('students.search_books')}}?search_query={{search_query}}&category={{category.name}}"
+                    class="nav-link" data-category="{{category.id}}">{{category.name}}</a>
+            </li>
+            {%endfor%}
+        </ul>
+
+        <div class="mt-4">
+            <div class="row">
+                <div class="col-md-10">
+                    {% if search_query %}
+                    <div class="alert alert-info shadow-sm rounded-2">
+                        <i class="bx bx-info-circle me-2"></i>
+                        <span>Showing results found for: <strong class="mx-2">{{search_query}}</strong></span>
+                    </div>
+                    <div class="mt-2">
+                        {% if result_count > 0 %}
+                        {%for book in books%}
+                        <div class="card shadow rounded-0 border-0">
+                            <div class="card-body p-lg-4">
+                                <h5 class="text-primary-50 fw-bold text-capitalize">{{book.title}}</h5>
+                                <div class="mt-4">
+                                    <p class="text-black-50 fw-bold text-capitalize">
+                                        Category:
+                                        <a href="#" class="ms-1 text-primary-50">{{book.category_name}}</a>
+                                    </p>
+                                    <p class="text-black-50 fw-bold text-capitalize">Date Published: {{book.date}}</p>
+                                    <p class="text-black-50 fw-bold text-capitalize">Description:</p>
+                                    <p class="text-secondary">
+                                        <small>{{book.sypnosis}}</small>
+                                    </p>
+                                </div>
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-c-success" data-id="{{book.id}}"
+                                        data-bs-toggle="modal" data-bs-target="#info-modal" type="button">View
+                                        Book</button>
+                                </div>
+                            </div>
+                        </div>
+                        {%endfor%}
+                        {% else %}
+                        <div class="text-center">
+                            <p class="mt-5 text-secondary">No result found.</p>
+                        </div>
+                        {% endif %}
+                        {% else %}
+                        {% if books_count > 0 %}
+                        {%for book in books%}
+                        <div class="card shadow rounded-0 border-0">
+                            <div class="card-body p-lg-4">
+                                <h5 class="text-primary-50 fw-bold text-capitalize">{{book.title}}</h5>
+                                <div class="mt-4">
+                                    <p class="text-black-50 fw-bold text-capitalize">
+                                        Category:
+                                        <a href="#" class="ms-1 text-primary-50">{{book.category_name}}</a>
+                                    </p>
+                                    <p class="text-black-50 fw-bold text-capitalize">Date Published: {{book.date}}</p>
+                                    <p class="text-black-50 fw-bold text-capitalize">Description:</p>
+                                    <p class="text-secondary">
+                                        <small>{{book.sypnosis}}</small>
+                                    </p>
+                                </div>
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-c-success" data-id="{{book.id}}"
+                                        data-bs-toggle="modal" data-bs-target="#info-modal" type="button">View
+                                        Book</button>
+                                </div>
+                            </div>
+                        </div>
+                        {%endfor%}
+                        {% else %}
+                        <div class="text-center">
+                            <p class="mt-5 text-secondary">No available books to display.</p>
+                        </div>
+                        {%endif%}
+
+                        {% endif %}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="position-fixed end-0 bottom-0 me-3 mb-3">
+        <button class="btn btn-light border text-primary-50 shadow rounded-circle" data-bs-toggle="offcanvas" data-bs-target="#cart-offcanvas" type="button">
+            <i class='bx bx-list-plus bx-s mt-1 fs-3'></i>
+        </button>
+    </div>
+</section>
+
+{% include "students/components/cart.html.jinja" %}
+{% include "students/components/search-modals.html.jinja" %}
+
+{%endblock%}
+
+{%block scripts %}
+<script>
+    $(function () {
+        let categoryId = $("#category-nav").data('active');
+        $("#category-nav .nav-link").filter((i, link) => $(link).data("category") === categoryId).addClass('active')
+    })
+
+    $("#info-modal").on("show.bs.modal", function (e) {
+        let id = $(e.relatedTarget).data('id')
+
+        $.ajax({
+            url: "{{url_for('api.get_books')}}",
+            method: 'post',
+            data: { id },
+            dataType: 'json',
+            success: function (res) {
+                console.log('res: ', res)
+                $("#title").html(res.title)
+                $("#category").html(res.category_name)
+                $("#author").html(res.author_name)
+                $("#date_published").html(res.date_published)
+                $("#author").html(res.author)
+                $("#description").html(res.sypnosis)
+                $("#info-placeholders").addClass('d-none')
+                $("#content").removeClass('d-none')
+
+                $("#borrow-btn").attr('href', `{{url_for("students.borrow_book")}}?id=${res.id}`)
+            }
+        })
+
+    })
+
+    $("#cart-offcanvas").on('show.bs.offcanvas', function (e) {
+        $(".modal").modal('hide')
+    })
+
+    //loads selected books
+    const loadBooks = () =>{
+        $.ajax({
+            url:"{{url_for('students.get_selected_books')}}",
+            method:"POST",
+            dataType:'json',
+            success:function(res){
+                console.log('res: ',res)
+            },
+            error:function(err){
+                console.log('error: ',err)
+            }
+        })
+    }
+
+    $(function(){
+        loadBooks()
+    })
+
+</script>
+{%endblock%}

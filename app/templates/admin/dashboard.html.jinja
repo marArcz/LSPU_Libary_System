@@ -6,6 +6,15 @@
 <div class="container">
     <h3>Dashboard</h3>
     <hr>
+    <div class="">
+        {% for message in get_flashed_messages(category_filter=["message"]) %}
+        <div class="text-start flash alert alert-success mb-3"><i class="bx bxs-check-circle me-1"></i> {{ message }}
+        </div>
+        {% endfor %}
+        {% for message in get_flashed_messages(category_filter=["error"]) %}
+        <div class="text-start flash alert alert-danger mb-3"><i class="bx bx-info-circle me-1"></i> {{ message }}</div>
+        {% endfor %}
+    </div>
     <div class="row gx-3 gy-2">
         <div class="col-lg-4">
             <!-- number of pending requests -->
@@ -84,7 +93,7 @@
                 </div>
             </div>
         </div>
-       
+
     </div>
 </div>
 {%endblock%}

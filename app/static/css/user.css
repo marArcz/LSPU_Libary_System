@@ -27,4 +27,37 @@ main {
   margin: 0 auto;
   left: 0;
   right: 0;
+}
+
+.search-header {
+  background: url("../images/gL9d6Wnb_4x 1.png");
+  width: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 20px 0;
+}
+.search-header .search-input-group {
+  position: relative;
+}
+.search-header .search-input-group .icon {
+  position: absolute;
+  left: 1rem;
+  font-weight: bold;
+  top: 10px;
+}
+.search-header .search-input-group .search-input {
+  padding-left: 2.8rem;
+  border: none;
+  outline: none !important;
+  box-shadow: none !important;
+}
+.search-header .search-card {
+  margin-bottom: -2.5rem;
+}
+
+.search-category-nav .nav-link.active {
+  border-bottom: 3px solid #0B177F;
+}
+.search-category-nav .nav-link:not(.active):hover {
+  background: rgba(11, 23, 127, 0.1);
 }/*# sourceMappingURL=user.css.map */

@@ -370,7 +370,7 @@ def get_book():
 
     return redirect(url_for('admin.books'))
 
-@bp.route('/books/get')
+@bp.route('/books/delete')
 def delete_book():
     id = request.args.get('id')
 
@@ -391,5 +391,7 @@ def delete_book():
 @bp.route('/rentals')
 @login_required
 def rentals():
-    
+    db = get_db()
+    rentals = db.execute("SELECT * FROM rentals INNER JOIN students ON rentals.student_id = students.id").fetchall()
+    return render_template("admin/rentals.html.jinja",rentals=rentals,len=len(rentals))
 

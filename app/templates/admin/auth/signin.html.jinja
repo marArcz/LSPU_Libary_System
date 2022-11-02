@@ -31,11 +31,11 @@
                             <p class="fs-5 text-secondary mb-5">Sign in to manage system.</p>
                             <div class="container">
                                 {% for message in get_flashed_messages(category_filter=["error"]) %}
-                                <div class="text-start py-2 flash alert alert-danger mb-3">{{ message }}</div>
+                                <div class="text-start flash alert alert-danger mb-3"><i class="bx bxs-info-circle"></i> {{ message }}</div>
                                 {% endfor %}
-                                {% if session.success %}
-                                <div class="text-start py-2 alert alert-info mb-3">{{ session.success }}</div>
-                                {%endif%}
+                                 {% for message in get_flashed_messages(category_filter=["message"]) %}
+                                <div class="text-start flash alert alert-success mb-3"><i class="bx bxs-check-circle"></i> {{ message }}</div>
+                                {% endfor %}
                             </div>
                             <form action="{{url_for('admin_auth.signin')}}" method="post">
                                 <div class="container">

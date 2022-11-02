@@ -81,48 +81,4 @@ main .main-content {
   border-right: none;
   border-left-width: 3px !important;
   border-left-style: solid !important;
-}
-
-.btn-c-primary {
-  background: rgba(11, 23, 127, 0.15) !important;
-  color: #0b177f;
-  font-weight: bold !important;
-  border: 1px solid rgba(11, 23, 127, 0.12) !important;
-}
-.btn-c-primary:hover {
-  background: rgba(11, 23, 127, 0.25) !important;
-  color: #0b177f !important;
-}
-
-.btn-c-warning {
-  background: rgba(249, 202, 1, 0.15) !important;
-  color: #f9ca01;
-  font-weight: bold !important;
-  border: 1px solid rgba(249, 202, 1, 0.12) !important;
-}
-.btn-c-warning:hover {
-  background: rgba(249, 202, 1, 0.25) !important;
-  color: #f9ca01 !important;
-}
-
-.btn-c-success {
-  background: rgba(54, 179, 126, 0.15) !important;
-  color: #36b37e;
-  font-weight: bold !important;
-  border: 1px solid rgba(54, 179, 126, 0.12) !important;
-}
-.btn-c-success:hover {
-  background: rgba(54, 179, 126, 0.25) !important;
-  color: #36b37e !important;
-}
-
-.btn-c-danger {
-  background: rgba(222, 53, 11, 0.15) !important;
-  color: #de350b;
-  font-weight: bold !important;
-  border: 1px solid rgba(222, 53, 11, 0.12) !important;
-}
-.btn-c-danger:hover {
-  background: rgba(222, 53, 11, 0.25) !important;
-  color: #de350b !important;
 }/*# sourceMappingURL=admin.css.map */

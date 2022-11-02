@@ -99,17 +99,3 @@ main {
     border-left-style: solid !important;
 }
 
-@each $color,
-$value in $custom-color-map {
-    .btn-c-#{$color} {
-        background: rgba($color: $value, $alpha: 0.15) !important;
-        color: rgba($color: $value, $alpha: 1);
-        font-weight: bold !important;
-        border: 1px solid rgba($color: $value, $alpha: 0.12) !important;
-
-        &:hover {
-            background: rgba($color: $value, $alpha: 0.25) !important;
-            color: rgba($color: $value, $alpha: 1) !important;
-        }
-    }
-}
