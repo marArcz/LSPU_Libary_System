@@ -14,7 +14,7 @@
 
 <body>
     {%include 'students/components/navbar.html.jinja'%}
-    <main>    
+    <main>
         {%block content %} {%endblock%}
     </main>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
@@ -24,7 +24,14 @@
         integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.5/dist/sweetalert2.min.js"></script>
-
+    <script>
+        $.each($(".nav-c-tabs"), (index, elem) => {
+            let list = $(elem)
+            console.log('lsist: ', list)
+            let activeKey = list.data('active')
+            list.find(".nav-link").filter((i, link) => $(link).data("key") === activeKey).addClass('active')
+        })
+    </script>
     {%block scripts%} {%endblock%}
 </body>
 

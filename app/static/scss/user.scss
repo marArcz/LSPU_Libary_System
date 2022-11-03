@@ -82,7 +82,20 @@ main {
 }
 
 .nav-c-tabs {
+    display: flex;
+    flex-direction: row !important;
+    list-style: none;
+    padding: 0;
+    padding-bottom: 20px;
+    overflow-x: auto;
+    width: 100%;
+    max-width: 100%;
+    li{
+        margin-right: 25px;
+    }
     .nav-link {
+        width: max-content;
+        padding: 5px 10px !important;        
         &.active {
             border-bottom: 3px solid $blue;
         }

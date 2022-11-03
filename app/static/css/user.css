@@ -62,6 +62,25 @@ main {
   background: rgba(11, 23, 127, 0.1);
 }
 
+.nav-c-tabs {
+  display: flex;
+  flex-direction: row !important;
+  list-style: none;
+  padding: 0;
+  padding-bottom: 20px;
+  overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
+}
+.nav-c-tabs li {
+  margin-right: 25px;
+}
+.nav-c-tabs .nav-link {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  padding: 5px 10px !important;
+}
 .nav-c-tabs .nav-link.active {
   border-bottom: 3px solid #0B177F;
 }

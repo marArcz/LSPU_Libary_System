@@ -18,6 +18,11 @@ $danger:$red;
 .btn-success{
     color: white !important;
 }
+.btn-outline-success{
+    &:hover{
+        color: white !important;
+    }
+}
 .btn-danger{
     color: white !important;
 }
@@ -33,6 +38,20 @@ $value in $custom-color-map {
         color: rgba($color: $value, $alpha: 1);
         font-weight: bold !important;
         border: 1px solid rgba($color: $value, $alpha: 0.12) !important;
+
+        &:hover {
+            background: rgba($color: $value, $alpha: 0.25) !important;
+            color: rgba($color: $value, $alpha: 1) !important;
+        }
+    }
+}
+@each $color,
+$value in $custom-color-map {
+    .btn-c-light-#{$color} {
+        background: rgba($color: $value, $alpha: 0.1) !important;
+        color: rgba($color: $value, $alpha: 1);
+        font-weight: bold !important;
+        border: 1px solid rgba($color: $value, $alpha: 0.3) !important;
 
         &:hover {
             background: rgba($color: $value, $alpha: 0.25) !important;

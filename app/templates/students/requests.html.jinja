@@ -21,25 +21,36 @@ Requests
         </div>
     </div>
     <div class="container">
-        <ul class="nav mt-3 nav-c-tabs flex-row overflow-auto">
+        <ul class=" mt-3 nav-c-tabs mb-2" data-active="{{tab}}">
             <li class="nav-item">
-                <a href="{{url_for('students.checkout')}}?tab=Pending" class="nav-link active">Pending</a>
+                <a href="{{url_for('students.requests')}}?tab=Pending" data-key="pending" class="nav-link ">Pending</a>
             </li>
             <li class="nav-item">
-                <a href="{{url_for('students.checkout')}}?tab=Approved" class="nav-link">Approved</a>
+                <a href="{{url_for('students.requests')}}?tab=Approved" data-key="approved"
+                    class="nav-link">Approved</a>
             </li>
             <li class="nav-item">
-                <a href="{{url_for('students.checkout')}}?tab=Unreturned" class="nav-link">Not Yet Returned</a>
+                <a href="{{url_for('students.requests')}}?tab=Unreturned" data-key="unreturned" class="nav-link">Not Yet
+                    Returned</a>
             </li>
             <li class="nav-item">
-                <a href="{{url_for('students.checkout')}}?tab=Completed" class="nav-link">Completed</a>
+                <a href="{{url_for('students.requests')}}?tab=Completed" data-key="completed"
+                    class="nav-link">Completed</a>
             </li>
         </ul>
-
+        {% if requests|length > 0 %}
+        <div class="alert alert-info py-2">
+            <small>
+                <i class="me-1 bx bx-info-circle"></i> Showing <span class=" text-capitalize">{{tab}} Requests</span>
+            </small>
+        </div>
+        {% else %}
+        <p class="mt-4 text-center text-secondary">Nothing to display.</p>
+        {% endif %}
         <div class="mt-3">
             {% for request in requests %}
             <div class="card mb-3">
-                <div class="card-body">
+                <div class="card-body p-4">
                     <h6 class="fw-bold">{{request.rental_no}}</h6>
                     <p class="text-black-50">
                         <small>{{request.date}}</small>
@@ -74,11 +85,29 @@ Requests
                         {% endif %}
 
                         {# buttons #}
-                        {% if request.status == 0 %}
-                        {% else %}
-                        {% endif %}
-                        <div class="mt-2">
-                            <button class="btn btn-sm btn-c-primary"></button>
+
+                        <div class="mt-5 ">
+                            {% if request.status == 1 %}
+                            <button type="button" class="btn btn-sm btn-c-light-dark pending-btn">
+                                <i class="bx bx-hourglass"></i> Pending Request
+                            </button>
+                            {% elif request.status == 1 %}
+                            <button type="button" class="btn btn-sm btn-c-light-primary approved-btn">
+                                <i class="bx bx-check"></i> Approved
+                            </button>
+                            {% elif request.status == 2 %}
+                            <button type="button" class="btn btn-sm btn-c-light-dark unreturned-btn">
+                                <i class="bx bx-minus"></i> Not Yet Returned
+                            </button>
+                            {% elif request.status == 3 %}
+                            <button type="button" class="btn btn-sm btn-c-light-success completed-btn">
+                                <i class="bx bx-check"></i> Completed
+                            </button>
+                            {%else%}
+                            <button type="button" class="btn btn-sm btn-c-light-danger declined-btn">
+                                <i class='bx bx-dislike' ></i> Declined
+                            </button>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -88,3 +117,8 @@ Requests
     </div>
 </section>
 {% endblock content %}
+
+
+{% block scripts %}
+
+{% endblock scripts %}

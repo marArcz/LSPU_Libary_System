@@ -180,7 +180,7 @@ def checkout():
 def requests():
     db=get_db()
     tabs = {'pending':0,'approved':1,'unreturned':2,'complete':3}
-    tab = request.args.get('tab') if request.args.get('tab') else "Pending"
+    tab = request.args.get('tab') if request.args.get('tab') else "pending"
     tab = tab.lower()
 
 
@@ -197,7 +197,5 @@ def requests():
         }
         all_requests.append(new_request)
         rental_details.append(details)
-    # return jsonify({
-    #     'rental_details':rental_details
-    # })
-    return render_template("students/requests.html.jinja",requests=all_requests,len=len(requests),rental_details=rental_details)
+
+    return render_template("students/requests.html.jinja",requests=all_requests,len=len(requests),rental_details=rental_details,tab=tab)

@@ -50,6 +50,9 @@
             const current_url = window.location.pathname
             $('#sidebar .nav-link').filter((i, link) => $(link).attr('href') === current_url)
             .addClass('active')
+
+
+         
         })
     </script>
     {%block scripts%} {%endblock%}
