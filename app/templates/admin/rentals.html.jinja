@@ -3,7 +3,7 @@
 
 {%block content%}
 <div class="container">
-    <h3>Rentals</h3>
+    <h3>Requests</h3>
     <hr>
     <div class="">
         {% for message in get_flashed_messages(category_filter=["message"]) %}
@@ -21,16 +21,15 @@
                 <tr>
                     <th>#</th>
                     <th>Student</th>
-                    <th>Date Rented</th>
+                    <th>Date Requested</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-            <tbody>
                 {%for i in range(0,len)%}
                 <tr>
-                    <td>{{i+1}}</td>
+                    <td>{{rentals[i].rental_no}}</td>
                     <td>
                         {{rentals[i].firstname}} {{rentals[i].middlename}} {{rentals[i].lastname}}
                     </td>
@@ -39,15 +38,19 @@
                     </td>
                     <td>
                         {%if rentals[i].status == 0 %}
-                            Not returned
+                           Pending
+                        {%elif rentals[i].status == 1%}
+                            Approved
+                        {%elif rentals[i].status == 2%}
+                            Not yet Returned
                         {%else%}
                             Returned
                         {%endif%}
                         
                     </td>
+                    <td></td>
                 </tr>
                 {%endfor%}
-            </tbody>
             </tbody>
         </table>
     </div>

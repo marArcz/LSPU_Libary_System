@@ -60,4 +60,11 @@ main {
 }
 .search-category-nav .nav-link:not(.active):hover {
   background: rgba(11, 23, 127, 0.1);
+}
+
+.nav-c-tabs .nav-link.active {
+  border-bottom: 3px solid #0B177F;
+}
+.nav-c-tabs .nav-link:not(.active):hover {
+  background: rgba(11, 23, 127, 0.1);
 }/*# sourceMappingURL=user.css.map */

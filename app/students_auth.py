@@ -28,7 +28,7 @@ def login():
         db = get_db()
         error = None
         student = db.execute(
-            'SELECT * FROM students WHERE student_id = ?', (student_id)
+            'SELECT * FROM students WHERE student_id = ?', (student_id,)
         ).fetchone()
 
         if student is None:
@@ -37,12 +37,19 @@ def login():
             error = 'Incorrect password.'
 
         if error is None:
-            session.pop('student_id')
             session['student_id'] = student['id']
-            return redirect(url_for('students.home'))
+            redirect_url = session.get('redirect')
+            if redirect_url is not None:
+                del session['redirect']
+                return redirect(redirect_url)
+            else:
+                return redirect(url_for('students.index'))
 
-        flash(error)
-
+        flash(error,'error')
+    else:
+        redirect_url = request.args.get('redirect')
+        if redirect_url is not None:
+            session['redirect'] = redirect_url
     return render_template('students/index.html.jinja')
 
 @bp.route('/logout')

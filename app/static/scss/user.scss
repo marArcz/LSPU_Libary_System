@@ -72,3 +72,15 @@ main{
         }
     }
 }
+.nav-c-tabs{
+    .nav-link{
+        &.active{
+            border-bottom: 3px solid $blue;
+        }
+        &:not(.active){
+            &:hover{
+                background: rgba($color: $blue, $alpha: 0.1);
+            }
+        }
+    }
+}

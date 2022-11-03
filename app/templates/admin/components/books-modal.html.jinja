@@ -31,6 +31,10 @@
                         </select>
                     </div>
                     <div class="mb-3">
+                        <label for="" class="form-label">No. of Copies:</label>
+                        <input type="number" min="1" name="copies" required placeholder="No. of copies" class="form-control">
+                    </div>
+                    <div class="mb-3">
                         <label for="" class="form-label">Date Published:</label>
                         <input type="date" name="date_published" required class="form-control">
                     </div>
@@ -72,6 +76,10 @@
                         <label for="" class="form-label">Category:</label>
                         <input type="text" name="" id="info-category" readonly required 
                             class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">No. of Copies:</label>
+                        <input type="number" min="1" id="info-copies" name="copies" required placeholder="No. of copies" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Date Published:</label>
@@ -122,6 +130,10 @@
                             <option value="{{category.id}}">{{category.name}}</option>
                             {%endfor%}
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">No. of Copies:</label>
+                        <input type="number" min="1" id="edit-copies" name="copies" required placeholder="No. of copies" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Date Published:</label>

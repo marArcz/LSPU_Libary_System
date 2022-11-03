@@ -45,14 +45,17 @@ CREATE TABLE books(
     author_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL,
     isAvailable INTEGER DEFAULT 1,
+    copies INTEGER DEFAULT 1,
     FOREIGN KEY (author_id) REFERENCES authors(id),
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 CREATE TABLE rentals(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    rental_no TEXT NOT NULL UNIQUE,
     student_id INTEGER NOT NULL,
     date_rented DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status INTEGER NOT NULL,
+    --status : 0-pending, 1-approved, 2-Not yet returned, 3-Returned
+    status INTEGER NOT NULL DEFAULT 0, 
     FOREIGN KEY (student_id) REFERENCES students(id)
     
 );

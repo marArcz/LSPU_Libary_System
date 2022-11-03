@@ -36,15 +36,27 @@
                         <div class="mt-5">
                             <div class="d-flex align-content-end">
                                 <div>
-                                    <button type="button" id="borrow-btn"  class="btn btn-c-primary me-2 px-2 px-lg-3 rounded-pill fs-6 text-center">
-                                        <small class=" d-flex align-items-center">
-                                            <span>Select this Book</span>  
-                                        <i class='bx bx-plus-circle ms-1'></i>
-                                        </small>
-                                    </button>
+                                    <form action="#" id="select-book-form" method="post">
+                                        <input type="hidden" name="id" id="book-id" >
+                                        <button type="submit" id="info-btn-select"
+                                            class="btn btn-c-primary me-2 px-2 px-lg-3 rounded-pill fs-6 text-center">
+                                            <small class=" d-flex align-items-center">
+                                                <span>Select this Book</span>
+                                                <i class='bx bx-plus-circle ms-1'></i>
+                                            </small>
+                                        </button>
+                                        <button type="button" id="info-btn-remove"
+                                            class="btn btn-c-danger me-2 d-none px-2 px-lg-3 rounded-pill fs-6 text-center">
+                                            <small class=" d-flex align-items-center">
+                                                <span>Remove from selection</span>
+                                                <i class='bx bx-x-circle ms-1'></i>
+                                            </small>
+                                        </button>
+                                    </form>
                                 </div>
                                 <div class="text-end ms-auto">
-                                    <button type="button" class="btn btn-light border my-0" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-light border my-0"
+                                        data-bs-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>

@@ -58,7 +58,7 @@
                     <div class="mt-2">
                         {% if result_count > 0 %}
                         {%for book in books%}
-                        <div class="card shadow rounded-0 border-0">
+                        <div class="card shadow rounded-0 border-0 mb-3">
                             <div class="card-body p-lg-4">
                                 <h5 class="text-primary-50 fw-bold text-capitalize">{{book.title}}</h5>
                                 <div class="mt-4">
@@ -69,13 +69,15 @@
                                     <p class="text-black-50 fw-bold text-capitalize">Date Published: {{book.date}}</p>
                                     <p class="text-black-50 fw-bold text-capitalize">Description:</p>
                                     <p class="text-secondary">
-                                        <small>{{book.sypnosis}}</small>
+                                        <small>{{ book.sypnosis|truncate(200, True, ' ...') }}</small>
                                     </p>
                                 </div>
                                 <div class="mt-2">
                                     <button class="btn btn-sm btn-c-success" data-id="{{book.id}}"
                                         data-bs-toggle="modal" data-bs-target="#info-modal" type="button">View
                                         Book</button>
+                                    <button class="btn btn-sm btn-c-primary add-book" data-id="{{book.id}}"
+                                        data-bs-toggle="modal" data-bs-target="#info-modal" type="button"><i class="bx bx-plus-circle"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -88,7 +90,7 @@
                         {% else %}
                         {% if books_count > 0 %}
                         {%for book in books%}
-                        <div class="card shadow rounded-0 border-0">
+                        <div class="card shadow rounded-0 border-0 mb-3">
                             <div class="card-body p-lg-4">
                                 <h5 class="text-primary-50 fw-bold text-capitalize">{{book.title}}</h5>
                                 <div class="mt-4">
@@ -99,13 +101,15 @@
                                     <p class="text-black-50 fw-bold text-capitalize">Date Published: {{book.date}}</p>
                                     <p class="text-black-50 fw-bold text-capitalize">Description:</p>
                                     <p class="text-secondary">
-                                        <small>{{book.sypnosis}}</small>
+                                        <small>{{ book.sypnosis|truncate(200, True, ' ...') }}</small>
                                     </p>
                                 </div>
                                 <div class="mt-2">
                                     <button class="btn btn-sm btn-c-success" data-id="{{book.id}}"
-                                        data-bs-toggle="modal" data-bs-target="#info-modal" type="button">View
-                                        Book</button>
+                                        data-bs-toggle="modal" data-bs-target="#info-modal" type="button">
+                                        View Book
+                                    </button>
+                                    <button class="btn btn-sm btn-c-primary add-book" data-id="{{book.id}}" type="button"><i class="bx bx-plus-circle"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -126,7 +130,8 @@
     </div>
 
     <div class="position-fixed end-0 bottom-0 me-3 mb-3">
-        <button class="btn btn-light border text-primary-50 shadow rounded-circle" data-bs-toggle="offcanvas" data-bs-target="#cart-offcanvas" type="button">
+        <button class="btn btn-light border text-primary-50 shadow rounded-circle" data-bs-toggle="offcanvas"
+            data-bs-target="#cart-offcanvas" type="button">
             <i class='bx bx-list-plus bx-s mt-1 fs-3'></i>
         </button>
     </div>
@@ -139,6 +144,7 @@
 
 {%block scripts %}
 <script>
+    var selected_books_ids = []
     $(function () {
         let categoryId = $("#category-nav").data('active');
         $("#category-nav .nav-link").filter((i, link) => $(link).data("category") === categoryId).addClass('active')
@@ -162,8 +168,17 @@
                 $("#description").html(res.sypnosis)
                 $("#info-placeholders").addClass('d-none')
                 $("#content").removeClass('d-none')
+                $("#book-id").val(res.id)
 
-                $("#borrow-btn").attr('href', `{{url_for("students.borrow_book")}}?id=${res.id}`)
+                if (selected_books_ids.indexOf(res.id) > -1) {
+                    //if book is already selected
+                    $("#info-btn-select").addClass('d-none')
+                    $("#info-btn-remove").removeClass('d-none')
+
+                } else {
+                    $("#info-btn-remove").addClass('d-none')
+                    $("#info-btn-select").removeClass('d-none')
+                }
             }
         })
 
@@ -172,25 +187,147 @@
     $("#cart-offcanvas").on('show.bs.offcanvas', function (e) {
         $(".modal").modal('hide')
     })
+    $("#cart-offcanvas").on('hidden.bs.offcanvas', function (e) {
+        loadBooks()
+    })
 
+    function createCard(book) {
+        let card = `
+                 <div class="card border card-selected-book bg-white mb-2" id="card-selected-book-${book.id}">
+                <div class="card-body text-secondary">
+                    <p class="text-primary-50 fs-6 mb-3 fw-bold">
+                        ${book.title}
+                    </p>
+                    <p class="mb-2">
+                        <small>Category: ${book.category_name}</small>
+                    </p>
+                    <p class="mb-2">
+                        <small>Date Published: ${book.date_published}</small>
+                    </p>
+
+                    <div class="mt-2 text-end">
+                        <button class="btn btn-c-dark btn-sm cart-btn-remove" data-card='#card-selected-book-${book.id}' data-id="${book.id}" type="button">Remove</button>
+                    </div>
+                </div>
+            </div>
+        `
+
+        return card
+    }
     //loads selected books
-    const loadBooks = () =>{
+    const loadBooks = () => {
+        $('#borrow-list').addClass('d-none')
+        $('#borrow-loader').removeClass('d-none')
+
         $.ajax({
-            url:"{{url_for('students.get_selected_books')}}",
-            method:"POST",
-            dataType:'json',
-            success:function(res){
-                console.log('res: ',res)
+            url: "{{url_for('students.get_selected_books')}}",
+            method: "POST",
+            dataType: 'json',
+            success: function (res) {
+                console.log('res: ', res)
+                const borrowList = $("#borrow-list")
+
+                if (res.count > 0) {
+                    borrowList.html('')
+                    $("#borrow-all").removeClass('disabled')
+
+                } else {
+                    borrowList.html(`<p class="text-center text-black-50">Nothing's here</p>`)
+                    $("#borrow-all").addClass('disabled')
+                }
+                selected_books_ids = []
+                for (let x = 0; x < res.books.length; x++) {
+                    selected_books_ids.push(res.books[x].id)
+                    console.log('book: ', res.books[x])
+                    let card = createCard(res.books[x])
+                    borrowList.append(card)
+                }
+
+                setupListeners()
+
+                setTimeout(() => {
+                    $('#borrow-list').removeClass('d-none')
+                    $('#borrow-loader').addClass('d-none')
+                },800)
             },
-            error:function(err){
-                console.log('error: ',err)
+            error: function (err) {
+                console.log('error: ', err)
             }
         })
     }
 
-    $(function(){
+    function setupListeners() {
+        $(".cart-btn-remove").on("click", function (e) {
+            let id = $(this).data('id')
+            let card = $($(this).data('card'))
+            
+            if($('.card-selected-book').length > 1){
+                card.remove()
+            }else{
+                card.remove()
+                $("#borrow-list").html(`<p class="text-center text-black-50">Nothing's here</p>`)
+                    $("#borrow-all").addClass('disabled')
+
+            }
+
+            $.ajax(
+                {
+                    'url': "{{url_for('students.remove_book')}}",
+                    method: "POST",
+                    data: { id },
+                    dataType: "json",
+                    success: function (res) {
+                        console.log('remove res: ', res)
+                        
+                    }
+                }
+            )
+        })
+    }
+
+    $(function () {
         loadBooks()
     })
 
+    $('#select-book-form').on("submit", function (e) {
+        e.preventDefault()
+
+        let id = $("#book-id").val()
+        $.ajax({
+            url: "{{url_for('students.add_book')}}",
+            method: "POST",
+            data: { id },
+            dataType: 'json',
+            success: function (res) {
+                console.log('res: ', res)
+                $("#cart-offcanvas").offcanvas('show')
+                loadBooks();
+            },
+            error: function (err) {
+                console.log('error: ', err)
+            }
+        })
+
+    })
+
+    $("#info-btn-remove").on("click", function (e) {
+        let id = $("#book-id").val()
+        $.ajax(
+            {
+                'url': "{{url_for('students.remove_book')}}",
+                method: "POST",
+                data: { id },
+                dataType: "json",
+                success: function (res) {
+                    console.log('remove res: ', res)
+                    loadBooks()
+                    $("#info-btn-select").removeClass('d-none')
+                    $("#info-btn-remove").addClass('d-none')
+
+                }
+            }
+        )
+    })
+    
 </script>
 {%endblock%}

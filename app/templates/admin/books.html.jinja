@@ -30,7 +30,7 @@
                     <th>Title</th>
                     <th>Category</th>
                     <th>Author</th>
-                    <th>Status</th>
+                    <th>Available Copies</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -41,7 +41,7 @@
                     <td>{{books[i].title}}</td>
                     <td>{{books[i].category_name}}</td>
                     <td>{{books[i].author_name}}</td>
-                    <td>Available</td>
+                    <td><span class="text-primary fw-bold">{{books[i].available}}</span> / {{books[i].copies}}</td>
                     <td>
                         <div class="dropdown">
                             <button class="btn btn-light text-primary pb-0 border" type="button" data-bs-toggle="dropdown"
@@ -88,13 +88,15 @@
                 console.log('res: ', res)
                 let date = new Date(res.date_published)
                 console.log('date: ', date)
-                console.log('str date: ', `${date.getFullYear()}-${date.getMonth()}-${date.getDate() < 10? '0'+date.getDate():date.getDate()}`)
+                console.log('str date: ', `${date.getFullYear()}-${date.getMonth() < 10? '0'+(1+date.getMonth()):date.getMonth()}-${date.getDate() < 10? '0'+date.getDate():date.getDate()}`)
                 $("#edit-title-box").val(res.title)
                 $("#edit-sypnosis-box").val(res.sypnosis)
-                $("#edit-date-published-box").val(`${date.getFullYear()}-${date.getMonth() < 10? '0'+date.getMonth():date.getMonth()}-${date.getDate() < 10? '0'+date.getDate():date.getDate()}`)
+                $("#edit-date-published-box").val(`${date.getFullYear()}-${date.getMonth() < 10? '0'+(1+date.getMonth()):date.getMonth()}-${date.getDate() < 10? '0'+date.getDate():date.getDate()}`)
                 $('#edit-category').val(res.category_id).html(res.category_name)
                 $('#edit-author').val(res.author_id).html(res.author_name)
                 $("#edit-id-box").val(res.id)
+                $("#edit-copies").val(res.copies)
+
             },
             error: function (err) {
                 console.log('error: ', err)
@@ -116,6 +118,7 @@
                 $("#info-sypnosis").val(res.sypnosis)
                 $("#info-category").val(res.category_name)
                 $("#info-author").val(res.author_name)
+                $("#info-copies").val(res.copies)
                 $("#info-date-published").val(res.date_published)
                 $('#id-box').val(res.id)
 
