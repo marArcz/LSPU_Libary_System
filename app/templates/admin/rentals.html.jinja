@@ -14,7 +14,7 @@
         <div class="text-start flash alert alert-danger mb-3"><i class="bx bx-info-circle me-1"></i> {{ message }}</div>
         {% endfor %}
     </div>
-   
+
     <div class="table-responsive-sm">
         <table class="table" id="table">
             <thead>
@@ -36,19 +36,50 @@
                     <td>
                         {{rentals[i].date}}
                     </td>
-                    <td>
+                    <td class="fw-bold">
                         {%if rentals[i].status == 0 %}
-                           Pending
+                        Pending
                         {%elif rentals[i].status == 1%}
-                            Approved
+                        Approved
                         {%elif rentals[i].status == 2%}
-                            Not yet Returned
+                        Not yet Returned
                         {%else%}
-                            Returned
+                        Returned
                         {%endif%}
-                        
+
                     </td>
-                    <td></td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-light text-primary pb-0 border" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class='bx bx-dots-horizontal-rounded fs-4'></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item fw-light text-primary-50" data-id="{{books[i].id }}"
+                                        href="#info-modal" data-bs-toggle="modal"><i class="me-1 bx bx-fullscreen"></i>
+                                        Information</a></li>
+                            </ul>
+                        </div>
+                        {%if rentals[i].status == 0 %}
+                        <button class="btn btn-sm btn-c-light-primary me-2" type="button">
+                            <i class="bx bx-fullscreen me-1"></i>
+                            More
+                        </button>
+                        <button class="btn btn-sm btn-outline-success approve" type="button"><i class="bx bx-like"></i>
+                            Approve</button>
+                        <button class="btn btn-sm btn-outline-danger decline" type="button"><i
+                                class="bx bx-dislike"></i> Decline</button>
+                        {%elif rentals[i].status == 1%}
+                        <button class="btn btn-sm btn-outline-success approve" type="button"><i
+                                class="bx bx-like"></i>Approve</button>
+                        <button class="btn btn-sm btn-outline-danger decline" type="button"><i
+                                class="bx bx-dislike"></i> Decline</button>
+                        {%elif rentals[i].status == 2%}
+                        Not yet Returned
+                        {%else%}
+                        Returned
+                        {%endif%}
+                    </td>
                 </tr>
                 {%endfor%}
             </tbody>
@@ -62,7 +93,7 @@
 {%block scripts%}
 <script>
 
-    $(function(){
+    $(function () {
         $("#table").dataTable()
     })
 
@@ -111,7 +142,7 @@
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-               window.location.href = `{{url_for('admin.delete_student')}}?id=${id}`
+                window.location.href = `{{url_for('admin.delete_student')}}?id=${id}`
             }
         })
     })
