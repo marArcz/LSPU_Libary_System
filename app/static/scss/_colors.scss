@@ -8,5 +8,6 @@ $custom-color-map:(
     'warning':$yellow,
     'success':$green,
     'danger':$red,
-    'dark':$black
+    'dark':$black,
+    'secondary':rgba($black,0.2)
 )

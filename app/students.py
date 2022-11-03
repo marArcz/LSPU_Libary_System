@@ -17,6 +17,13 @@ def flash_error_msg(msg=None):
     
     return flash(msg, 'error')
 
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
+
+
 @bp.route("/")
 def index():
     db = get_db()
@@ -199,3 +206,17 @@ def requests():
         rental_details.append(details)
 
     return render_template("students/requests.html.jinja",requests=all_requests,len=len(requests),rental_details=rental_details,tab=tab)
+
+# returns json
+@bp.route('/requests/get',methods=('POST',))
+def get_request():
+    db=get_db()
+    db.row_factory = dict_factory
+    id = request.form['id']
+
+    req = db.execute("SELECT STRFTIME('%m-%d-%Y',rentals.date_rented) as date,rentals.id, rentals.rental_no FROM rentals WHERE id = ?",(id,)).fetchone()
+    details = db.execute("SELECT rental_details.*,books.title,STRFTIME('%m-%d-%Y',books.date_published) as date, categories.name as category_name FROM rental_details INNER JOIN books ON rental_details.book_id = books.id INNER JOIN categories ON books.category_id = categories.id WHERE rental_details.rental_id = ?",(req['id'],)).fetchall()
+    new_req = {**req, 'details':details }
+
+    return jsonify(new_req)
+    

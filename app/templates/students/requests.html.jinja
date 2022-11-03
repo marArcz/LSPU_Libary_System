@@ -87,25 +87,35 @@ Requests
                         {# buttons #}
 
                         <div class="mt-5 ">
-                            {% if request.status == 1 %}
-                            <button type="button" class="btn btn-sm btn-c-light-dark pending-btn">
-                                <i class="bx bx-hourglass"></i> Pending Request
+                            {% if request.status == -1 %}
+                            <button data-id="{{request.id}}" type="button" class="btn btn-sm btn-c-light-secondary pending-btn px-lg-3 rounded-pill">
+                                <small>
+                                    <i class="bx bx-hourglass"></i> Pending Request
+                                </small>
                             </button>
                             {% elif request.status == 1 %}
-                            <button type="button" class="btn btn-sm btn-c-light-primary approved-btn">
-                                <i class="bx bx-check"></i> Approved
+                            <button data-id="{{request.id}}" type="button" class="btn btn-sm btn-c-light-primary approved-btn px-lg-3 rounded-pill">
+                                <small>
+                                    <i class="bx bx-check"></i> Approved
+                                </small>
                             </button>
                             {% elif request.status == 2 %}
-                            <button type="button" class="btn btn-sm btn-c-light-dark unreturned-btn">
-                                <i class="bx bx-minus"></i> Not Yet Returned
+                            <button data-id="{{request.id}}" type="button" class="btn btn-sm btn-c-light-dark unreturned-btn px-lg-3 rounded-pill">
+                                <small>
+                                    <i class="bx bx-minus"></i> Not Yet Returned
+                                </small>
                             </button>
                             {% elif request.status == 3 %}
-                            <button type="button" class="btn btn-sm btn-c-light-success completed-btn">
-                                <i class="bx bx-check"></i> Completed
+                            <button data-id="{{request.id}}" type="button" class="btn btn-sm btn-c-light-success completed-btn px-lg-3 rounded-pill">
+                                <small>
+                                    <i class="bx bx-check"></i> Completed
+                                </small>
                             </button>
                             {%else%}
-                            <button type="button" class="btn btn-sm btn-c-light-danger declined-btn">
-                                <i class='bx bx-dislike' ></i> Declined
+                            <button data-id="{{request.id}}" type="button" class="btn btn-sm btn-c-light-danger declined-btn px-lg-3 rounded-pill">
+                                <small>
+                                    <i class='bx bx-x-circle' ></i> Declined
+                                </small>
                             </button>
                             {% endif %}
                         </div>
@@ -116,9 +126,54 @@ Requests
         </div>
     </div>
 </section>
+
+{% include "students/components/request-modals.html.jinja" %}
 {% endblock content %}
 
 
 {% block scripts %}
+
+<script>
+    const showModal = (requestId, status) =>{
+        const months = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"]
+        $.ajax({
+            url:"{{url_for('students.get_request')}}",
+            method:"POST",
+            data:{id:requestId},
+            dataType:"json",
+            success:function(res){
+                console.log('res: ', res)
+                let date = new Date(res.date)
+                $("#status").html(status)
+                $("#request_id").html(res.rental_no)
+                $("#no_of_books").html(res.details.length)
+                $("#date_requested").html(`${months[date.getMonth()]}. ${date.getDate() < 10?'0'+date.getDate():date.getDate()}, ${date.getFullYear()}`)
+
+                $("#content").removeClass("d-none")
+                $("#info-placeholders").addClass("d-none")
+
+
+                //set action button to display
+                
+
+            },
+            error:function(err){
+                console.log('err: ', err)
+            }
+        })
+
+        $("#info-modal").modal('show')
+    }
+
+    $(".pending-btn").on("click",function(e){
+        let id = $(this).data('id')
+        showModal(id, "Pending")
+    })
+    $(".declined-btn").on("click",function(e){
+        let id = $(this).data('id')
+        showModal(id, "Declined")
+    })
+
+</script>
 
 {% endblock scripts %}
