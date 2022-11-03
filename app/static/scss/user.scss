@@ -1,29 +1,33 @@
 @import './colors';
 
 $logo-lg: 3rem;
-$navbar-h:10vh;
+$navbar-h: 10vh;
 
 #navbar {
     height: $navbar-h;
-    .logo{
+
+    .logo {
         width: $logo-lg;
     }
 }
-main{
+
+main {
     padding-top: $navbar-h !important;
 }
-.hero-main{
+
+.hero-main {
     background: url('../images/gL9d6Wnb_4x\ 1.png');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
     position: relative;
-    .text{
+
+    .text {
         border-left: 4px solid $yellow;
         padding-left: 20px !important;
     }
 
-    .footer{
+    .footer {
         background: $blue;
         position: absolute;
         bottom: -18px;
@@ -33,53 +37,92 @@ main{
     }
 }
 
-.search-header{
+.search-header {
     background: url('../images/gL9d6Wnb_4x\ 1.png');
     width: 100%;
     background-size: cover;
     background-repeat: no-repeat;
     padding: 20px 0;
 
-    .search-input-group{
+    .search-input-group {
         position: relative;
-        .icon{
+
+        .icon {
             position: absolute;
             left: 1rem;
             font-weight: bold;
             top: 10px;
         }
-        .search-input{
+
+        .search-input {
             padding-left: 2.8rem;
             border: none;
             outline: none !important;
             box-shadow: none !important;
         }
     }
-    .search-card{
+
+    .search-card {
         margin-bottom: -2.5rem;
     }
 }
 
-.search-category-nav{
-    .nav-link{
-        &.active{
+.search-category-nav {
+    .nav-link {
+        &.active {
             border-bottom: 3px solid $blue;
         }
-        &:not(.active){
-            &:hover{
+
+        &:not(.active) {
+            &:hover {
                 background: rgba($color: $blue, $alpha: 0.1);
             }
         }
     }
 }
-.nav-c-tabs{
-    .nav-link{
-        &.active{
+
+.nav-c-tabs {
+    .nav-link {
+        &.active {
             border-bottom: 3px solid $blue;
         }
-        &:not(.active){
-            &:hover{
+
+        &:not(.active) {
+            &:hover {
                 background: rgba($color: $blue, $alpha: 0.1);
+            }
+        }
+    }
+}
+
+.nav-c-list {
+    list-style: none;
+    li{
+        position: relative;
+        padding-left: 20px;
+     
+        &:after{
+            content: "";
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            top: 6px;
+            left: -15px;
+            background: rgba($color: $blue, $alpha: 0.7) !important;
+        }
+    }
+    &:not(.single){
+        li{
+            &::before{
+                content:"";
+                position: absolute;
+                left: -10.5px;
+                border-left: 1px solid rgb(160, 160, 160);
+                height: 100%;
+                width: 1px;
+            }
+            &:first-child::before{
+                top: 15.5px;
             }
         }
     }

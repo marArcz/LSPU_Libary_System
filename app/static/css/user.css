@@ -67,4 +67,32 @@ main {
 }
 .nav-c-tabs .nav-link:not(.active):hover {
   background: rgba(11, 23, 127, 0.1);
+}
+
+.nav-c-list {
+  list-style: none;
+}
+.nav-c-list li {
+  position: relative;
+  padding-left: 20px;
+}
+.nav-c-list li:after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 6px;
+  left: -15px;
+  background: rgba(11, 23, 127, 0.7) !important;
+}
+.nav-c-list:not(.single) li::before {
+  content: "";
+  position: absolute;
+  left: -10.5px;
+  border-left: 1px solid rgb(160, 160, 160);
+  height: 100%;
+  width: 1px;
+}
+.nav-c-list:not(.single) li:first-child::before {
+  top: 15.5px;
 }/*# sourceMappingURL=user.css.map */

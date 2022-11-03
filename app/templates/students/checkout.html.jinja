@@ -7,6 +7,11 @@
     <div class="container mt-5 ">
         <div class="row">
             <div class="col-md-9">
+                {% for message in get_flashed_messages(category_filter=["error"]) %}
+                <div class="text-start flash alert alert-danger mb-3"><i class="bx bxs-x-circle me-1"></i> 
+                {{ message }}
+                </div>
+                {% endfor %}
                 <div class="d-flex align-items-center mb-3">
                     <div>
                         <a href="/search" class="btn btn-sm btn-dark">

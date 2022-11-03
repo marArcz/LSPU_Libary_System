@@ -139,29 +139,33 @@ def checkout():
     db=get_db()
 
     if request.method == "POST":
-        book_ids = request.form.getlist('book_id')
+        book_ids = request.form.getlist('book_id[]')
         student_id = request.form['student_id']
-
+        
         try:
-            last_id = db.execute("SELECT last_insert_rowid() as id FROM rentals").fetchone()
-            if last_id is None:
+            get_id = db.execute("SELECT max(id) as id FROM rentals").fetchone()
+            if get_id is None:
                 last_id = 1
             else:
-                last_id = last_id['id'] + 1
+                if get_id['id']:
+                    last_id = get_id['id'] + 1
+                else:
+                    last_id = 1
             rental_no = "LSPU-" + str(last_id).zfill(4)
-            print('#######rental_no: ',rental_no)
             db.execute("INSERT INTO rentals(student_id, status,rental_no) VALUES(?,?,?)",(student_id,0,rental_no))
             db.commit()
             rental_id = db.execute("SELECT last_insert_rowid() as id FROM rentals").fetchone()['id']
+
             for book_id in book_ids:
                 db.execute("INSERT INTO rental_details(rental_id,book_id) VALUES(?,?)",(rental_id,book_id))
                 db.commit()
-        except:
+        except db.IntegrityError:
             flash_error_msg()
         else:
+            # remove selected books from session after submitting requests
+            del session['borrowed_books']
             flash("Successfully submitted!")
             return redirect(url_for('students.requests'))
-        flash_error_msg()
         
     list = session.get('borrowed_books')
     books = []
@@ -183,13 +187,17 @@ def requests():
     student_id = g.student['id']
     requests = db.execute("SELECT students.*, rentals.status,rentals.rental_no,rentals.id as rental_id, STRFTIME('%m-%d-%Y',rentals.date_rented) as date FROM rentals INNER JOIN students ON rentals.student_id = students.id WHERE rentals.student_id=? AND rentals.status=? ORDER BY rentals.id DESC, rentals.status ASC",(student_id,tabs[tab])).fetchall()
     all_requests = []
-
+    rental_details = []
     for req in requests:
-        details = db.execute("SELECT *,books.title,categories.name as category_name FROM rental_details INNER JOIN books ON rental_details.book_id = books.id INNER JOIN categories ON books.category_id = categories.id WHERE rental_details.rental_id = ?",(req['rental_id'],)).fetchall()
+        details = db.execute("SELECT rental_details.*,books.title,categories.name as category_name FROM rental_details INNER JOIN books ON rental_details.book_id = books.id INNER JOIN categories ON books.category_id = categories.id WHERE rental_details.rental_id = ?",(req['rental_id'],)).fetchall()
+        print('*******rental_id: ', req['rental_id'])
         new_request = {
             **req,
             "rental_details":details
         }
         all_requests.append(new_request)
-
-    return render_template("students/requests.html.jinja",requests=all_requests,len=len(requests))
+        rental_details.append(details)
+    # return jsonify({
+    #     'rental_details':rental_details
+    # })
+    return render_template("students/requests.html.jinja",requests=all_requests,len=len(requests),rental_details=rental_details)
