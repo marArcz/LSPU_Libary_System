@@ -8,6 +8,7 @@
                     <h6 class="modal-title text-secondary placeholder-glow mb-3">
                         <span id="title">Request Details</span>
                     </h6>
+                    <input type="hidden" id="info-id" value="">
                     <div class="mt-1">
                         <p class="text-dark fw-bold text-capitalize">
                             Status:
@@ -29,20 +30,24 @@
 
                         <div class="mt-5">
                             <div class="d-flex align-content-end">
-                                {# <button type="submit" id="info-btn-select"
-                                    class="btn btn-c-primary me-2 btn-sm px-2 px-lg-3 rounded-pill fs-6 text-center">
-                                    <small class=" d-flex align-items-center">
-                                        <span>Select this Book</span>
-                                        <i class='bx bx-plus-circle ms-1'></i>
-                                    </small>
-                                </button> #}
-                                <button type="button"
-                                    class="btn btn-c-danger me-2 btn-sm px-2 px-lg-3 rounded-pill fs-6 text-center">
-                                    <small class=" d-flex align-items-center">
-                                        <span>Cancel Request</span>
-                                        <i class='bx bx-x-circle ms-1'></i>
-                                    </small>
-                                </button>
+
+                                <div>
+                                    {# actions buttons here #}
+                                    <a href="#" id="cancel" 
+                                        class="btn btn-c-danger me-2 d-none btn-sm px-2 px-lg-3 rounded-pill fs-6 text-center action-btn">
+                                        <small class="d-flex align-items-center">
+                                            <span>Cancel Request</span>
+                                            <i class='bx bx-x-circle ms-1'></i>
+                                        </small>
+                                    </a>
+                                    <a href="#" id="remove" 
+                                        class="btn btn-c-danger me-2 d-none btn-sm px-2 px-lg-3 rounded-pill fs-6 text-center action-btn">
+                                        <small class="d-flex align-items-center">
+                                            <span>Remove Request</span>
+                                            <i class='bx bx-trash ms-1'></i>
+                                        </small>
+                                    </a>
+                                </div>
                                 <div class="text-end ms-auto">
                                     <button type="button"
                                         class="btn rounded-pill btn-sm px-2 px-lg-3  btn-light border my-0"

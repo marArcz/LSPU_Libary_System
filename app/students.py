@@ -171,7 +171,6 @@ def checkout():
         else:
             # remove selected books from session after submitting requests
             del session['borrowed_books']
-            flash("Successfully submitted!")
             return redirect(url_for('students.requests'))
         
     list = session.get('borrowed_books')
@@ -214,9 +213,23 @@ def get_request():
     db.row_factory = dict_factory
     id = request.form['id']
 
-    req = db.execute("SELECT STRFTIME('%m-%d-%Y',rentals.date_rented) as date,rentals.id, rentals.rental_no FROM rentals WHERE id = ?",(id,)).fetchone()
+    req = db.execute("SELECT STRFTIME('%m-%d-%Y',date_rented) as date,id, rental_no FROM rentals WHERE id = ?",(id,)).fetchone()
     details = db.execute("SELECT rental_details.*,books.title,STRFTIME('%m-%d-%Y',books.date_published) as date, categories.name as category_name FROM rental_details INNER JOIN books ON rental_details.book_id = books.id INNER JOIN categories ON books.category_id = categories.id WHERE rental_details.rental_id = ?",(req['id'],)).fetchall()
     new_req = {**req, 'details':details }
 
     return jsonify(new_req)
     
+@bp.route("/requests/delete")
+def delete_request():
+    db=get_db()
+    id = request.args.get('id')
+
+    try:
+        db.execute("DELETE FROM rentals WHERE id = ?",(id,))
+        db.commit()
+    except:
+        flash_error_msg()
+    else:
+        flash("Successfully removed request!")
+    
+    return redirect(url_for("students.requests"))

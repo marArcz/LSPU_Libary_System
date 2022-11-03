@@ -21,6 +21,10 @@ Requests
         </div>
     </div>
     <div class="container">
+        {% for message in get_flashed_messages(category_filter=["message"]) %}
+        <div class="text-start flash alert alert-success mt-2 mb-3"><i class="bx bxs-check-circle me-1"></i> {{ message }}
+        </div>
+        {% endfor %}
         <ul class=" mt-3 nav-c-tabs mb-2" data-active="{{tab}}">
             <li class="nav-item">
                 <a href="{{url_for('students.requests')}}?tab=Pending" data-key="pending" class="nav-link ">Pending</a>
@@ -87,34 +91,39 @@ Requests
                         {# buttons #}
 
                         <div class="mt-5 ">
-                            {% if request.status == -1 %}
-                            <button data-id="{{request.id}}" type="button" class="btn btn-sm btn-c-light-secondary pending-btn px-lg-3 rounded-pill">
+                            {% if request.status == 0 %}
+                            <button data-id="{{request.rental_id}}" type="button"
+                                class="btn btn-sm btn-c-light-secondary pending-btn px-lg-3 rounded-pill">
                                 <small>
                                     <i class="bx bx-hourglass"></i> Pending Request
                                 </small>
                             </button>
                             {% elif request.status == 1 %}
-                            <button data-id="{{request.id}}" type="button" class="btn btn-sm btn-c-light-primary approved-btn px-lg-3 rounded-pill">
+                            <button data-id="{{request.rental_id}}" type="button"
+                                class="btn btn-sm btn-c-light-primary approved-btn px-lg-3 rounded-pill">
                                 <small>
                                     <i class="bx bx-check"></i> Approved
                                 </small>
                             </button>
                             {% elif request.status == 2 %}
-                            <button data-id="{{request.id}}" type="button" class="btn btn-sm btn-c-light-dark unreturned-btn px-lg-3 rounded-pill">
+                            <button data-id="{{request.rental_id}}" type="button"
+                                class="btn btn-sm btn-c-light-dark unreturned-btn px-lg-3 rounded-pill">
                                 <small>
                                     <i class="bx bx-minus"></i> Not Yet Returned
                                 </small>
                             </button>
                             {% elif request.status == 3 %}
-                            <button data-id="{{request.id}}" type="button" class="btn btn-sm btn-c-light-success completed-btn px-lg-3 rounded-pill">
+                            <button data-id="{{request.rental_id}}" type="button"
+                                class="btn btn-sm btn-c-light-success completed-btn px-lg-3 rounded-pill">
                                 <small>
                                     <i class="bx bx-check"></i> Completed
                                 </small>
                             </button>
                             {%else%}
-                            <button data-id="{{request.id}}" type="button" class="btn btn-sm btn-c-light-danger declined-btn px-lg-3 rounded-pill">
+                            <button data-id="{{request.rental_id}}" type="button"
+                                class="btn btn-sm btn-c-light-danger declined-btn px-lg-3 rounded-pill">
                                 <small>
-                                    <i class='bx bx-x-circle' ></i> Declined
+                                    <i class='bx bx-x-circle'></i> Declined
                                 </small>
                             </button>
                             {% endif %}
@@ -134,30 +143,36 @@ Requests
 {% block scripts %}
 
 <script>
-    const showModal = (requestId, status) =>{
-        const months = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"]
+    const showModal = (requestId, status) => {
+        const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
         $.ajax({
-            url:"{{url_for('students.get_request')}}",
-            method:"POST",
-            data:{id:requestId},
-            dataType:"json",
-            success:function(res){
+            url: "{{url_for('students.get_request')}}",
+            method: "POST",
+            data: { id: requestId },
+            dataType: "json",
+            success: function (res) {
                 console.log('res: ', res)
                 let date = new Date(res.date)
                 $("#status").html(status)
                 $("#request_id").html(res.rental_no)
                 $("#no_of_books").html(res.details.length)
-                $("#date_requested").html(`${months[date.getMonth()]}. ${date.getDate() < 10?'0'+date.getDate():date.getDate()}, ${date.getFullYear()}`)
+                $("#date_requested").html(`${months[date.getMonth()]}. ${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}, ${date.getFullYear()}`)
 
                 $("#content").removeClass("d-none")
                 $("#info-placeholders").addClass("d-none")
-
+                $("#info-id").val(res.id)
 
                 //set action button to display
-                
+                $(".action-btn").addClass("d-none")
+                if (status.toLowerCase() === "pending") {
+                    $("#cancel").removeClass("d-none")
+                }
+                else if (status.toLowerCase() === "completed") {
+                    $("#remove").removeClass("d-none")
+                }
 
             },
-            error:function(err){
+            error: function (err) {
                 console.log('err: ', err)
             }
         })
@@ -165,13 +180,19 @@ Requests
         $("#info-modal").modal('show')
     }
 
-    $(".pending-btn").on("click",function(e){
+    $(".pending-btn").on("click", function (e) {
         let id = $(this).data('id')
         showModal(id, "Pending")
     })
-    $(".declined-btn").on("click",function(e){
+    $(".declined-btn").on("click", function (e) {
         let id = $(this).data('id')
         showModal(id, "Declined")
+    })
+
+    $(".action-btn").on("click", function (e) {
+        e.preventDefault()
+        let id = $("#info-id").val()
+        window.location.href = "{{url_for('students.delete_request')}}?id=" + id
     })
 
 </script>
