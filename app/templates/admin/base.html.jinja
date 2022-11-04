@@ -52,7 +52,12 @@
             .addClass('active')
 
 
-         
+              $.each($(".nav-c-tabs"), (index, elem) => {
+            let list = $(elem)
+            console.log('lsist: ', list)
+            let activeKey = list.data('active')
+            list.find(".nav-link").filter((i, link) => $(link).data("key") === activeKey).addClass('active')
+        })
         })
     </script>
     {%block scripts%} {%endblock%}

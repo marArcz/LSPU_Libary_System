@@ -402,6 +402,33 @@ def delete_book():
 @login_required
 def rentals():
     db = get_db()
-    rentals = db.execute("SELECT students.*,rentals.rental_no,rentals.status, STRFTIME('%m-%d-%Y',rentals.date_rented) as date FROM rentals INNER JOIN students ON rentals.student_id = students.id").fetchall()
-    return render_template("admin/rentals.html.jinja",rentals=rentals,len=len(rentals))
+    tabs = {'pending':0,'approved':1,'completed':3}
+    tab = request.args.get('tab','pending')
+    rentals = db.execute("SELECT students.*,rentals.rental_no,rentals.status,rentals.id as rental_id, STRFTIME('%m-%d-%Y',rentals.date_rented) as date FROM rentals INNER JOIN students ON rentals.student_id = students.id WHERE rentals.status=?",(tabs[tab],)).fetchall()
+    all_rentals = []
 
+    for rental in rentals:
+        details = db.execute("SELECT rental_details.*,books.title,categories.name as category_name FROM rental_details INNER JOIN books ON rental_details.book_id = books.id INNER JOIN categories ON books.category_id = categories.id WHERE rental_details.rental_id = ?",(rental['rental_id'],)).fetchall()
+
+        new_rental = {
+            **rental,
+            'details':details
+        }
+
+        all_rentals.append(new_rental)
+
+    return render_template("admin/rentals.html.jinja",rentals=all_rentals,len=len(rentals),tab=tab)
+
+@bp.route("/requests/update/status")
+def update_request_status():
+    db=get_db()
+    id = request.args.get('id')
+    status = request.args.get("status")
+    try:
+        db.execute("UPDATE rentals SET status = ? WHERE id=?",(status,id))
+        db.commit()
+    except:
+        flash_error_msg()
+    else:
+        flash("Successfully updated!")
+    return redirect(url_for('admin.rentals'))

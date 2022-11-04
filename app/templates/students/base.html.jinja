@@ -31,6 +31,11 @@
             let activeKey = list.data('active')
             list.find(".nav-link").filter((i, link) => $(link).data("key") === activeKey).addClass('active')
         })
+
+        $.each($('.user-photo'), (index, elem) => {
+            let img = $(elem).data('img');
+            $(elem).css('background-image', `url('${img}')`)
+        })
     </script>
     {%block scripts%} {%endblock%}
 </body>

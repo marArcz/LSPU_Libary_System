@@ -10,6 +10,13 @@ from app.db import get_db
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
+
+
 @bp.route('/books', methods=('POST',))
 def get_books():
     if(request.method == "POST"):
@@ -30,3 +37,20 @@ def get_books():
             'author_name':book['author_name'],
         })
         )
+
+@bp.route('/requests/get',methods=('POST',))
+def get_request():
+    db=get_db()
+    db.row_factory = dict_factory
+    id = request.form['id']
+
+    req = db.execute("SELECT students.firstname, students.lastname, students.year_level, STRFTIME('%m-%d-%Y',rentals.date_rented) as date,rentals.id, rentals.rental_no FROM rentals INNER JOIN students ON rentals.student_id = students.id WHERE rentals.id = ?",(id,)).fetchone()
+    details = db.execute("SELECT rental_details.*,books.title,STRFTIME('%m-%d-%Y',books.date_published) as date, categories.name as category_name FROM rental_details INNER JOIN books ON rental_details.book_id = books.id INNER JOIN categories ON books.category_id = categories.id WHERE rental_details.rental_id = ?",(req['id'],)).fetchall()
+    new_req = {**req, 'details':details }
+
+    return jsonify(new_req)
+
+# @bp.route('/requests/update/status',methods=('POST',))
+# def update_request_status():
+#     db=get_db()
+    

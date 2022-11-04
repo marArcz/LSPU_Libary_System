@@ -4,7 +4,8 @@ from unicodedata import category
 from flask import (
     Blueprint, flash, g, jsonify, redirect, render_template, request, session, url_for
 )
-from werkzeug.exceptions import abort
+from werkzeug.security import check_password_hash, generate_password_hash
+
 
 from app.students_auth import login_required
 from app.db import get_db
@@ -181,14 +182,14 @@ def checkout():
     
     return render_template('students/checkout.html.jinja',books=books,books_count=len(books))
 
+# requests
 @bp.route('/requests')
 @login_required
 def requests():
     db=get_db()
-    tabs = {'pending':0,'approved':1,'unreturned':2,'complete':3}
+    tabs = {'pending':0,'approved':1,'unreturned':2,'completed':3}
     tab = request.args.get('tab') if request.args.get('tab') else "pending"
     tab = tab.lower()
-
 
     student_id = g.student['id']
     requests = db.execute("SELECT students.*, rentals.status,rentals.rental_no,rentals.id as rental_id, STRFTIME('%m-%d-%Y',rentals.date_rented) as date FROM rentals INNER JOIN students ON rentals.student_id = students.id WHERE rentals.student_id=? AND rentals.status=? ORDER BY rentals.id DESC, rentals.status ASC",(student_id,tabs[tab])).fetchall()
@@ -196,7 +197,6 @@ def requests():
     rental_details = []
     for req in requests:
         details = db.execute("SELECT rental_details.*,books.title,categories.name as category_name FROM rental_details INNER JOIN books ON rental_details.book_id = books.id INNER JOIN categories ON books.category_id = categories.id WHERE rental_details.rental_id = ?",(req['rental_id'],)).fetchall()
-        print('*******rental_id: ', req['rental_id'])
         new_request = {
             **req,
             "rental_details":details
@@ -204,7 +204,13 @@ def requests():
         all_requests.append(new_request)
         rental_details.append(details)
 
-    return render_template("students/requests.html.jinja",requests=all_requests,len=len(requests),rental_details=rental_details,tab=tab)
+    total_requests = db.execute("SELECT COUNT(*) as count FROM rentals WHERE student_id=?",(student_id,)).fetchone()['count']
+    unreturned = db.execute("SELECT COUNT(*) as count FROM rentals WHERE status != 0 AND status != 3 AND student_id=?",(student_id,)).fetchone()['count']
+    pending = db.execute("SELECT COUNT(*) as count FROM rentals WHERE status = 0 AND student_id=?",(student_id,)).fetchone()['count']
+    approved = db.execute("SELECT COUNT(*) as count FROM rentals WHERE status = 1 AND student_id=?",(student_id,)).fetchone()['count']
+    completed = db.execute("SELECT COUNT(*) as count FROM rentals WHERE status = 3 AND student_id=?",(student_id,)).fetchone()['count']
+    
+    return render_template("students/requests.html.jinja",requests=all_requests,len=len(requests),rental_details=rental_details,tab=tab,total_requests=total_requests,unreturned=unreturned,pending=pending,approved=approved,completed=completed)
 
 # returns json
 @bp.route('/requests/get',methods=('POST',))
@@ -233,3 +239,22 @@ def delete_request():
         flash("Successfully removed request!")
     
     return redirect(url_for("students.requests"))
+
+@bp.route("/profile",methods=('GET','POST'))
+@login_required
+def profile():
+    if request.method == "POST":
+        id = request.form['id']
+        email = request.form['email']
+        password = request.form['password']
+
+        try:
+            db = get_db()
+            db.execute("UPDATE students SET email = ?, password=?",(email, generate_password_hash(password)))
+            db.commit()
+        except:
+            flash_error_msg()
+        else:
+            flash("Successfully updated!")
+    return render_template("students/profile.html.jinja")
+

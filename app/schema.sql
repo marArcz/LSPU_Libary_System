@@ -38,6 +38,7 @@ CREATE TABLE authors(
 
 CREATE TABLE books(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    isbn Text NOT NULL,
     title TEXT NOT NULL,
     sypnosis TEXT(5000) NOT NULL,
     date_published date not null,
