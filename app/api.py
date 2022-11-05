@@ -54,3 +54,30 @@ def get_request():
 # def update_request_status():
 #     db=get_db()
     
+
+@bp.route('/students/password/check',methods=('POST',))
+def check_student_password():
+    db=get_db()
+    id = request.form['id']
+    password = request.form['password']
+    student = db.execute("SELECT * FROM students WHERE id = ?",(id,)).fetchone()
+
+    matched = check_password_hash(student['password'],password)
+
+    return jsonify({
+        'matched':matched
+    })
+
+@bp.route('/admin/password/check',methods=('POST',))
+def check_admin_password():
+    db=get_db()
+    id = request.form['id']
+    password = request.form['password']
+    admin = db.execute("SELECT * FROM admin WHERE id = ?",(id,)).fetchone()
+
+    matched = check_password_hash(admin['password'],password)
+
+    return jsonify({
+        'matched':matched
+    })
+

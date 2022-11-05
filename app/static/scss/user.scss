@@ -1,10 +1,10 @@
 @import './colors';
 
 $logo-lg: 3rem;
-$navbar-h: 10vh;
+$navbar-h: 80px;
 
 #navbar {
-    height: $navbar-h;
+    min-height: $navbar-h;
 
     .logo {
         width: $logo-lg;
@@ -154,4 +154,17 @@ main {
     background-repeat: no-repeat !important;
     background-size: cover !important;
     border: 3px solid rgb(218, 218, 218);
+
+    button{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 40%;
+        top: 80%;
+        transform: translateY(-50%);
+        height: min-content !important;
+        margin: auto;
+        // margin-left: 50%;
+    }
 }

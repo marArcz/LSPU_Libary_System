@@ -5,6 +5,7 @@ from flask import (
     Blueprint, flash, g, jsonify, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 
 
 from app.students_auth import login_required
@@ -62,6 +63,7 @@ def search_books():
         books_count += book['copies'] - borrowed
         all_books.append(new_book)
     
+
     return render_template('students/search.html.jinja',books=books,search_query=search_query,result_count=len(books),books_count=books_count,categories=categories,selected_category=selected_category)
 
 @bp.route('/borrow')
@@ -119,7 +121,7 @@ def get_selected_books():
     list = session.get('borrowed_books',None) #string : '1,2,3,4'
 
     if list is not None and len(list) > 0:
-        books = db.execute( "SELECT books.id, books.title, STRFTIME('%m-%d-%Y',books.date_published) as date, categories.name as category_name FROM books INNER JOIN categories ON books.category_id = categories.id WHERE books.id IN ("+list+")").fetchall()
+        books = db.execute("SELECT books.id, books.title, STRFTIME('%m-%d-%Y',books.date_published) as date, categories.name as category_name FROM books INNER JOIN categories ON books.category_id = categories.id WHERE books.id IN ("+list+")").fetchall()
         all_books = []
 
         for book in books:
@@ -246,15 +248,40 @@ def profile():
     if request.method == "POST":
         id = request.form['id']
         email = request.form['email']
-        password = request.form['password']
+        password = request.form.get('password',None)
 
         try:
             db = get_db()
-            db.execute("UPDATE students SET email = ?, password=?",(email, generate_password_hash(password)))
-            db.commit()
+            if password:
+                db.execute("UPDATE students SET email = ?, password=? WHERE id = ?",(email, generate_password_hash(password),id))
+                db.commit()
+            else:
+                db.execute("UPDATE students SET email = ? WHERE id = ?",(email, id))
+                db.commit()
         except:
             flash_error_msg()
         else:
             flash("Successfully updated!")
-    return render_template("students/profile.html.jinja")
+    db=get_db()
+    student = db.execute("SELECT * FROM students WHERE id = ?",(g.student['id'],)).fetchone()
+    return render_template("students/profile.html.jinja",account=student)
 
+@bp.route('/profile/photo',methods=('POST','GET'))
+def update_photo():
+    photo = request.files['photo']
+    id = request.form['id']
+    # upload photo
+    filename = secure_filename(photo.filename)
+    path = 'static/images/' + filename
+    photo.save("app/"+path)
+
+    try:
+        db=get_db()
+
+        db.execute("UPDATE students SET photo = ? WHERE id=?",(path,id)).fetchone()
+        db.commit()
+    except:
+        flash_error_msg()
+    else:
+        flash("Successfully updated!")
+    return redirect(url_for("students.profile"))

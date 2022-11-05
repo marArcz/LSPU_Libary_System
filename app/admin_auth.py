@@ -106,3 +106,9 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
+
+@bp.route('/signout')
+def sign_out():
+    g.admin = None
+    del session['admin_id']
+    return redirect('/admin')

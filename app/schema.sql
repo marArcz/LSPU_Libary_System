@@ -15,7 +15,8 @@ CREATE TABLE students (
   lastname TEXT NOT NULL,
   gender TEXT NOT NULL,
   year_level TEXT NOT NULL,
-  student_id TEXT UNIQUE NOT NULL
+  student_id TEXT UNIQUE NOT NULL,
+  photo
 );
 
 CREATE TABLE admin (
@@ -55,7 +56,7 @@ CREATE TABLE rentals(
     rental_no TEXT NOT NULL UNIQUE,
     student_id INTEGER NOT NULL,
     date_rented DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    --status : 0-pending, 1-approved, 2-Not yet returned, 3-Returned
+    --status : 0-pending, 1-approved, 2-declined, 3-Returned
     status INTEGER NOT NULL DEFAULT 0, 
     FOREIGN KEY (student_id) REFERENCES students(id)
     

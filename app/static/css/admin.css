@@ -4,7 +4,7 @@ body {
 }
 
 #navbar {
-  height: 12vh;
+  height: 80px;
 }
 #navbar .logo {
   width: 3.6rem;
@@ -24,11 +24,11 @@ main.auth {
 main #sidebar {
   position: fixed;
   left: 0;
-  top: 12vh;
-  height: 100%;
+  top: 80px;
+  height: 100vh;
   width: 210px;
   background: #fff;
-  overflow-x: hidden;
+  overflow-y: auto;
 }
 main #sidebar .nav-link {
   padding: 13px 15px;
@@ -46,8 +46,8 @@ main .main-content {
 }
 
 .auth-profile-pic {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   margin: auto;
   border-radius: 50%;
   box-sizing: border-box;
@@ -66,6 +66,10 @@ main .main-content {
   background-repeat: no-repeat !important;
   background-size: cover !important;
 }
+.user-photo.sm {
+  width: 70px !important;
+  height: 70px !important;
+}
 
 .dashboard-card {
   border-top: none;
@@ -81,4 +85,21 @@ main .main-content {
   border-right: none;
   border-left-width: 3px !important;
   border-left-style: solid !important;
+}
+
+@media screen and (max-width: 768px) {
+  #sidebar {
+    z-index: 1;
+    background: white !important;
+    left: -210px !important;
+    transition: 200ms !important;
+    overflow-y: scroll;
+    padding-bottom: 150px;
+  }
+  #sidebar.open {
+    left: 0 !important;
+  }
+  main .main-content {
+    margin-left: 0;
+  }
 }/*# sourceMappingURL=admin.css.map */

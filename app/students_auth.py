@@ -55,7 +55,7 @@ def login():
 @bp.route('/logout')
 def logout():
     session.pop('student_id')
-    return redirect(url_for('students.home'))
+    return redirect(url_for('students.index'))
 
 
 def login_required(view):

@@ -33,8 +33,7 @@
         </div>
     </header>
     <div class="container mt-5 ">
-        <ul class="nav search-category-nav" id="category-nav"
-            data-active="{{selected_category.id if selected_category else 0}}">
+        <ul class=" nav-c-tabs" id="category-nav" data-active="{{selected_category.id if selected_category else 0}}">
             <li class="nav-item mx-2">
                 <a href="{{url_for('students.search_books')}}?search_query={{search_query}}&category=" class="nav-link"
                     data-category="0">All</a>
@@ -54,7 +53,9 @@
                     <div class="alert alert-info shadow-sm rounded-2">
                         <i class="bx bx-info-circle me-2"></i>
                         <span>Showing results found for: <strong class="mx-2">{{search_query}}</strong></span>
+                        {# <p class="mt-2 mb-0 fw-bold">Category: {{selected_category.name if selected_category else ""}}</p> #}
                     </div>
+
                     <div class="mt-2">
                         {% if result_count > 0 %}
                         {%for book in books%}
@@ -64,7 +65,8 @@
                                 <div class="mt-4">
                                     <p class="text-black-50 fw-bold text-capitalize">
                                         Category:
-                                        <a href="#" class="ms-1 text-primary-50">{{book.category_name}}</a>
+                                        <a href="{{url_for('students.search_books')}}"
+                                            class="ms-1 text-primary-50">{{book.category_name}}</a>
                                     </p>
                                     <p class="text-black-50 fw-bold text-capitalize">Date Published: {{book.date}}</p>
                                     <p class="text-black-50 fw-bold text-capitalize">Description:</p>
@@ -76,8 +78,7 @@
                                     <button class="btn btn-sm btn-c-success" data-id="{{book.id}}"
                                         data-bs-toggle="modal" data-bs-target="#info-modal" type="button">View
                                         Book</button>
-                                    <button class="btn btn-sm btn-c-primary add-book" data-id="{{book.id}}"
-                                        data-bs-toggle="modal" data-bs-target="#info-modal" type="button"><i class="bx bx-plus-circle"></i></button>
+
                                 </div>
                             </div>
                         </div>
@@ -109,7 +110,7 @@
                                         data-bs-toggle="modal" data-bs-target="#info-modal" type="button">
                                         View Book
                                     </button>
-                                    <button class="btn btn-sm btn-c-primary add-book" data-id="{{book.id}}" type="button"><i class="bx bx-plus-circle"></i></button>
+
                                 </div>
                             </div>
                         </div>
@@ -248,7 +249,7 @@
                 setTimeout(() => {
                     $('#borrow-list').removeClass('d-none')
                     $('#borrow-loader').addClass('d-none')
-                },800)
+                }, 800)
             },
             error: function (err) {
                 console.log('error: ', err)
@@ -260,13 +261,13 @@
         $(".cart-btn-remove").on("click", function (e) {
             let id = $(this).data('id')
             let card = $($(this).data('card'))
-            
-            if($('.card-selected-book').length > 1){
+
+            if ($('.card-selected-book').length > 1) {
                 card.remove()
-            }else{
+            } else {
                 card.remove()
                 $("#borrow-list").html(`<p class="text-center text-black-50">Nothing's here</p>`)
-                    $("#borrow-all").addClass('disabled')
+                $("#borrow-all").addClass('disabled')
 
             }
 
@@ -278,7 +279,7 @@
                     dataType: "json",
                     success: function (res) {
                         console.log('remove res: ', res)
-                        
+
                     }
                 }
             )
@@ -310,6 +311,26 @@
 
     })
 
+    $(".add-book").on('click', function (e) {
+        e.preventDefault()
+
+        let id = $(this).data('id')
+        $.ajax({
+            url: "{{url_for('students.add_book')}}",
+            method: "POST",
+            data: { id },
+            dataType: 'json',
+            success: function (res) {
+                console.log('res: ', res)
+                $("#cart-offcanvas").offcanvas('show')
+                loadBooks();
+            },
+            error: function (err) {
+                console.log('error: ', err)
+            }
+        })
+    })
+
     $("#info-btn-remove").on("click", function (e) {
         let id = $("#book-id").val()
         $.ajax(
@@ -328,6 +349,6 @@
             }
         )
     })
-    
+
 </script>
 {%endblock%}
