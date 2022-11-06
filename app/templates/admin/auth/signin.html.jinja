@@ -18,58 +18,63 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                     <div class="row justify-content-center mb-5">
-                                <div class="col-md-11 text-center">
-                                    <img src="{{url_for('static',filename='images/image.png')}}"
-                                        class="img-fluid" alt="">
+                    <div class="row justify-content-center mb-5">
+                        <div class="col-md-11 text-center">
+                            <img src="{{url_for('static',filename='images/image.png')}}" class="img-fluid" alt="">
+                        </div>
+                    </div>
+                    <h2 class="mt-4 mb-3 fw-bold text-center">ADMIN - SIGN IN</h2>
+                    <p class="fs-5 text-secondary mb-5 text-center">Sign in to manage system.</p>
+                    <div class="container">
+                        {% for message in get_flashed_messages(category_filter=["error"]) %}
+                        <div class="text-start flash alert alert-danger mb-3"><i class="bx bxs-info-circle"></i>
+                            {{ message }}</div>
+                        {% endfor %}
+                        {% for message in get_flashed_messages(category_filter=["message"]) %}
+                        <div class="text-start flash alert alert-success mb-3"><i class="bx bxs-check-circle"></i> {{
+                            message }}</div>
+                        {% endfor %}
+                    </div>
+                    <form action="{{url_for('admin_auth.signin')}}" method="post">
+                        <div class="container">
+                            <div class="mb-3 text-start">
+                                <div class="input-group mb-3 rounded-">
+                                    <span class="input-group-text bg- text-dark " id="basic-addon1">
+                                        <i class="bx bxs-user"></i>
+                                    </span>
+                                    <input type="text" name="username" required placeholder="Username"
+                                        class="form-control form-control-lg ">
                                 </div>
                             </div>
-                            <h2 class="mt-4 mb-3 fw-bold text-center">ADMIN - SIGN IN</h2>
-                            <p class="fs-5 text-secondary mb-5 text-center">Sign in to manage system.</p>
-                            <div class="container">
-                                {% for message in get_flashed_messages(category_filter=["error"]) %}
-                                <div class="text-start flash alert alert-danger mb-3"><i class="bx bxs-info-circle"></i>
-                                    {{ message }}</div>
-                                {% endfor %}
-                                {% for message in get_flashed_messages(category_filter=["message"]) %}
-                                <div class="text-start flash alert alert-success mb-3"><i
-                                        class="bx bxs-check-circle"></i> {{ message }}</div>
-                                {% endfor %}
-                            </div>
-                            <form action="{{url_for('admin_auth.signin')}}" method="post">
-                                <div class="container">
-                                    <div class="mb-3 text-start">
-                                        <div class="input-group mb-3 rounded-">
-                                            <span class="input-group-text bg- text-dark " id="basic-addon1">
-                                                <i class="bx bxs-user"></i>
-                                            </span>
-                                            <input type="text" name="username" required placeholder="Username"
-                                                class="form-control form-control-lg ">
-                                        </div>
-                                    </div>
-                                    <div class="mb-3 text-start">
-                                        <!-- <label for="" class="form-label">Password</label> -->
-                                        <div class="input-group mb-3 rounded-">
-                                            <span class="input-group-text bg- text-dark " id="basic-addon1">
-                                                <i class="bx bxs-lock"></i>
-                                            </span>
-                                            
-                                        <input type="password" name="password" required placeholder="Password"
-                                            class="form-control form-control-lg rounded-0">
-                                        </div>
+                            <div class="mb-3 text-start">
+                                <!-- <label for="" class="form-label">Password</label> -->
+                                <div class="input-group mb-3 rounded-">
+                                    <span class="input-group-text bg- text-dark " id="basic-addon1">
+                                        <i class="bx bxs-lock"></i>
+                                    </span>
 
-                                    </div>
-                                    <div class="text-center">
-                                        <button class="btn px-4 px-lg-4 mt-3 btn-primary shadow  text-uppercase "
-                                    type="submit">signin</button>
-                                    </div>
+                                    <input type="password" name="password" required placeholder="Password"
+                                        class="form-control form-control-lg rounded-0">
                                 </div>
-                                
-                            </form>
+
+                            </div>
+                            <div class="text-center">
+                                <button class="btn px-4 px-lg-4 mt-3 btn-primary shadow  text-uppercase "
+                                    type="submit">signin</button>
+                            </div>
+                        </div>
+
+                    </form>
                 </div>
             </div>
         </div>
     </main>
+    <script>
+        document.addEventListener('contextmenu', function (e) {
+            alert("Sorry, right click is disabled to prevent leakage of confidential functions");
+            e.preventDefault();
+        });
+    </script>
 </body>
 
 </html>

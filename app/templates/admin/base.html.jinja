@@ -58,7 +58,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.5/dist/sweetalert2.min.js"></script>
     <script>
         $(function () {
-
+            document.addEventListener('contextmenu', function (e) {
+                alert("Sorry, right click is disabled to prevent leakage of confidential functions");
+                e.preventDefault();
+            });
             $.each($(".user-photo"), (index, elem) => {
                 console.log('elem: ', $(elem))
                 let img = $(elem).data('img');
@@ -81,31 +84,31 @@
                 $("#sidebar").toggleClass("open")
             })
 
-            $(".photo-chooser").on('change',function(e){
+            $(".photo-chooser").on('change', function (e) {
                 let files = e.target.files
                 let preview = $($(this).data('preview'))
 
-                preview.css('background-image',`url(${URL.createObjectURL(files[0])})`)
-                
+                preview.css('background-image', `url(${URL.createObjectURL(files[0])})`)
+
             })
 
             var verified_password = false
-            $("#password-form").on("submit",function(e){
-                if(!verified_password){
+            $("#password-form").on("submit", function (e) {
+                if (!verified_password) {
                     e.preventDefault()
 
                     let password = $("#current-password").val()
                     let id = $("#admin-id").val()
                     $.ajax({
-                        url:"{{url_for('api.check_admin_password')}}",
-                        method:'post',
-                        data:{id,password},
-                        dataType:"json",
-                        success:function(res){
-                            if(res.matched){
+                        url: "{{url_for('api.check_admin_password')}}",
+                        method: 'post',
+                        data: { id, password },
+                        dataType: "json",
+                        success: function (res) {
+                            if (res.matched) {
                                 verified_password = true
                                 $("#password-form").submit()
-                            }else{
+                            } else {
                                 $("#password-label").removeClass("d-none")
                             }
                         }

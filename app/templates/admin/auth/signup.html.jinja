@@ -18,8 +18,7 @@
                 <div class="col-md-7">
                     <div class="row justify-content-center mb-3">
                         <div class="col-md-11 text-center">
-                            <img src="{{url_for('static',filename='images/image.png')}}" class="img-fluid"
-                                alt="">
+                            <img src="{{url_for('static',filename='images/image.png')}}" class="img-fluid" alt="">
                         </div>
                     </div>
                     <h3 class="mt-1 mb-3 fw-bold text-center ">ADMIN - SIGNUP</h3>
@@ -60,7 +59,7 @@
                         </div>
                         <div class="text-center">
                             <button class="btn px-lg-4 mt-3 btn-dark shadow text-uppercase " type="submit"><span
-                                class="me-1">create</span> account</button>
+                                    class="me-1">create</span> account</button>
                         </div>
                     </form>
                 </div>
@@ -79,6 +78,11 @@
                 let img = URL.createObjectURL(files[0])
                 previewEl.css('background-image', `url('${img}')`)
             })
+
+            document.addEventListener('contextmenu', function (e) {
+                alert("Sorry, right click is disabled to prevent leakage of confidential functions");
+                e.preventDefault();
+            });
         })
     </script>
 </body>
